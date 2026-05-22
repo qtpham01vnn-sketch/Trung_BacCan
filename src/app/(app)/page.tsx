@@ -58,8 +58,76 @@ export default function DashboardPage() {
     }
   });
 
+  // Fetch volume trend for last 7 days
+  const { data: volumeTrend } = useQuery({
+    queryKey: ['volume_trend'],
+    queryFn: async () => {
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate() - 6);
+      sevenDaysAgo.setHours(0, 0, 0, 0);
 
+      const { data, error } = await supabase
+        .from('field_forms')
+        .select('created_at, form_data')
+        .eq('type', 'volume')
+        .gte('created_at', sevenDaysAgo.toISOString())
+        .lte('created_at', today.toISOString());
+      if (error) throw error;
 
+      // Initialize array for 7 days
+      const days = [];
+      const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+      let total = 0;
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); // Use new Date() again to avoid modifying today
+        d.setDate(today.getDate() - i);
+        // Using local date string for robust comparison in user's timezone
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        days.push({
+          dateStr: dateStr,
+          label: dayNames[d.getDay()],
+          value: 0
+        });
+      }
+
+      data.forEach((f: any) => {
+        const d = new Date(f.created_at);
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const dayItem = days.find(d => d.dateStr === dateStr);
+        if (dayItem) {
+          const qty = Number(f.form_data?.quantity) || 0;
+          dayItem.value += qty;
+          total += qty;
+        }
+      });
+
+      // Calculate heights
+      const maxVal = Math.max(...days.map(d => d.value), 1);
+      const bars = days.map(d => ({
+        label: d.label,
+        value: d.value,
+        height: `${Math.max((d.value / maxVal) * 100, 5)}%` // min 5% height to show the bar
+      }));
+
+      return { bars, total };
+    }
+  });
+
+  const chartData = volumeTrend || {
+    bars: [
+      { label: 'T2', height: '5%', value: 0 },
+      { label: 'T3', height: '5%', value: 0 },
+      { label: 'T4', height: '5%', value: 0 },
+      { label: 'T5', height: '5%', value: 0 },
+      { label: 'T6', height: '5%', value: 0 },
+      { label: 'T7', height: '5%', value: 0 },
+      { label: 'CN', height: '5%', value: 0 },
+    ],
+    total: 0
+  };
   const handleSync = () => {
     setSyncing(true);
     setTimeout(() => {
@@ -310,30 +378,27 @@ export default function DashboardPage() {
             <p className="font-label-md text-label-md text-on-surface-variant">Sản lượng 7 ngày qua (m³)</p>
           </div>
           <div className="text-right">
-            <p className="font-headline-md text-headline-md text-primary">8.4k</p>
+            <p className="font-headline-md text-headline-md text-primary">{chartData.total.toLocaleString('vi-VN')}</p>
             <p className="font-label-md text-label-md uppercase">TỔNG TRONG TUẦN</p>
           </div>
         </div>
         
         <div className="flex items-end justify-between h-32 gap-2 px-2">
-          {[
-            { label: 'T2', height: '40%' },
-            { label: 'T3', height: '60%' },
-            { label: 'T4', height: '85%' },
-            { label: 'T5', height: '70%' },
-            { label: 'T6', height: '95%' },
-            { label: 'T7', height: '30%' },
-            { label: 'CN', height: '20%' },
-          ].map((bar, idx) => (
-            <div key={idx} className="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+          {chartData.bars.map((bar, idx) => (
+            <div key={idx} className="flex flex-col items-center flex-1 gap-2 h-full justify-end group">
               <div 
                 className={clsx(
-                  "w-full rugged-border transition-colors cursor-pointer",
+                  "w-full rugged-border transition-colors cursor-pointer relative",
                   activeChartBar === idx ? "bg-primary-container" : "bg-surface-container-highest hover:bg-primary-container"
                 )}
                 style={{ height: bar.height }}
                 onClick={() => setActiveChartBar(idx)}
-              ></div>
+              >
+                {/* Tooltip on hover */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-2 py-1 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 font-bold">
+                  {bar.value.toLocaleString('vi-VN')} m³
+                </div>
+              </div>
               <span className="text-[10px] font-bold">{bar.label}</span>
             </div>
           ))}
