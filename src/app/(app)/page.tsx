@@ -273,18 +273,31 @@ export default function DashboardPage() {
             <Link href="/expenses" className="text-primary font-label-md text-label-md underline uppercase">XEM TẤT CẢ</Link>
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between items-center py-2 border-b border-surface-variant">
-              <span className="font-body-md text-body-md">Đổ dầu Diesel (500L)</span>
-              <span className="font-label-lg text-label-lg font-bold">12.4M VND</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-surface-variant">
-              <span className="font-body-md text-body-md">Sửa ống thủy lực</span>
-              <span className="font-label-lg text-label-lg font-bold">1.2M VND</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="font-body-md text-body-md">Dụng cụ bảo trì</span>
-              <span className="font-label-lg text-label-lg font-bold">0.8M VND</span>
-            </div>
+            {recentForms.filter((f: any) => f.type === 'expense').length === 0 ? (
+              <p className="text-sm opacity-60 italic py-2">Chưa có chi phí nào...</p>
+            ) : (
+              recentForms
+                .filter((f: any) => f.type === 'expense')
+                .slice(0, 3)
+                .map((expense: any) => {
+                  const data = expense.form_data || {};
+                  return (
+                    <div key={expense.id} className="flex justify-between items-center py-2 border-b border-surface-variant last:border-0">
+                      <div className="flex flex-col">
+                        <span className="font-body-md text-body-md truncate max-w-[180px] sm:max-w-[200px]" title={data.description || data.category}>
+                          {data.category || 'Khác'} {data.description ? `- ${data.description}` : ''}
+                        </span>
+                        <span className="text-[10px] text-on-surface-variant opacity-70">
+                          {new Date(expense.created_at).toLocaleDateString('vi-VN')}
+                        </span>
+                      </div>
+                      <span className="font-label-lg text-label-lg font-bold text-error whitespace-nowrap">
+                        {data.amount} VNĐ
+                      </span>
+                    </div>
+                  );
+                })
+            )}
           </div>
         </div>
       </section>
