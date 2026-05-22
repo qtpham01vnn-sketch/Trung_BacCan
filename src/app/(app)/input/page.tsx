@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { db, FieldForm } from "@/lib/db";
@@ -16,6 +16,23 @@ export default function InputHubPage() {
   const [photos, setPhotos] = useState<{ id: string; preview: string; note: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const role = useAuthStore((state) => state.role);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const type = params.get("type") as FormType;
+      if (type && ["attendance", "hours", "transport", "volume", "expense", "photo"].includes(type)) {
+        if (type === "photo") {
+          // If type is photo, just scroll to photo section since it doesn't have an active form state
+          setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          }, 300);
+        } else {
+          setActiveForm(type);
+        }
+      }
+    }
+  }, []);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
