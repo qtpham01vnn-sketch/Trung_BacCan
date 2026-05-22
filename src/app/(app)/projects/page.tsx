@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/client";
 
 type Project = {
@@ -15,7 +15,10 @@ type Project = {
 
 export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
   const { data: projects = [], isLoading, error } = useQuery({
     queryKey: ['projects'],
@@ -133,9 +136,83 @@ export default function ProjectsPage() {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container flex items-center justify-center rounded-none shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all z-40">
+      <button 
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container flex items-center justify-center rounded-none shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all z-40"
+      >
         <span className="material-symbols-outlined text-[32px] font-bold">add</span>
       </button>
+
+      {/* Add Project Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-surface w-full max-w-md border-2 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] animate-in zoom-in-95">
+            <div className="p-4 border-b-2 border-on-surface flex justify-between items-center bg-surface-container">
+              <h2 className="font-headline-sm text-headline-sm uppercase">Dự án mới</h2>
+              <button onClick={() => setIsModalOpen(false)} className="hover:text-error transition-colors">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <form 
+              className="p-4 space-y-4"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                const formData = new FormData(e.currentTarget);
+                const newProject = {
+                  id: crypto.randomUUID(),
+                  name: formData.get('name'),
+                  status: formData.get('status'),
+                  progress: Number(formData.get('progress')),
+                  members: Number(formData.get('members'))
+                };
+
+                const { error } = await supabase.from('projects').insert(newProject);
+                setIsSubmitting(false);
+
+                if (error) {
+                  alert('Lỗi khi thêm dự án: ' + error.message);
+                } else {
+                  queryClient.invalidateQueries({ queryKey: ['projects'] });
+                  queryClient.invalidateQueries({ queryKey: ['active_projects_count'] });
+                  setIsModalOpen(false);
+                }
+              }}
+            >
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant uppercase">Tên dự án</label>
+                <input name="name" required className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary" placeholder="Ví dụ: Kè bờ sông A..." />
+              </div>
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant uppercase">Trạng thái</label>
+                <select name="status" className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary appearance-none rounded-none">
+                  <option value="Đang chạy">Đang chạy</option>
+                  <option value="Hoàn thành">Hoàn thành</option>
+                </select>
+              </div>
+              <div className="flex gap-4">
+                <div className="space-y-2 flex-1">
+                  <label className="font-label-md text-on-surface-variant uppercase">Tiến độ (%)</label>
+                  <input name="progress" type="number" required min="0" max="100" defaultValue="0" className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary" />
+                </div>
+                <div className="space-y-2 flex-1">
+                  <label className="font-label-md text-on-surface-variant uppercase">Thành viên</label>
+                  <input name="members" type="number" required min="1" defaultValue="1" className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary" />
+                </div>
+              </div>
+              <div className="pt-4">
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-primary text-white font-bold text-label-lg border-2 border-on-surface flex items-center justify-center disabled:opacity-50 hover:bg-primary/90 transition-colors"
+                >
+                  {isSubmitting ? 'ĐANG LƯU...' : 'LƯU DỰ ÁN'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
