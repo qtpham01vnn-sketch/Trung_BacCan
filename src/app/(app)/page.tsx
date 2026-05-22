@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { clsx } from "clsx";
 
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/client";
 
@@ -111,22 +112,22 @@ export default function DashboardPage() {
       <section>
         <h2 className="font-headline-sm text-headline-sm mb-4">Tác vụ nhanh</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <button className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
+          <Link href="/input" className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
             <span className="material-symbols-outlined text-primary text-3xl">add_box</span>
             <span className="font-label-lg text-label-lg">Báo cáo mới</span>
-          </button>
-          <button className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
+          </Link>
+          <Link href="/input?type=hours" className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
             <span className="material-symbols-outlined text-primary text-3xl">play_circle</span>
             <span className="font-label-lg text-label-lg">Bắt đầu ca</span>
-          </button>
-          <button className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
+          </Link>
+          <Link href="/input?type=photo" className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
             <span className="material-symbols-outlined text-primary text-3xl">photo_camera</span>
             <span className="font-label-lg text-label-lg">Ảnh hiện trường</span>
-          </button>
-          <button className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
+          </Link>
+          <Link href="/input?type=attendance" className="flex flex-col items-center justify-center p-4 bg-white rugged-border active:opacity-80 active:scale-95 transition-all gap-2">
             <span className="material-symbols-outlined text-primary text-3xl">engineering</span>
             <span className="font-label-lg text-label-lg">Nhật ký an toàn</span>
-          </button>
+          </Link>
         </div>
       </section>
 
