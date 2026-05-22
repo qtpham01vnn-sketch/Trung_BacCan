@@ -270,7 +270,7 @@ export default function DashboardPage() {
         <div className="bg-white p-4 rugged-border">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-label-lg text-label-lg font-bold">Chi phí gần đây</h3>
-            <button className="text-primary font-label-md text-label-md underline uppercase">XEM TẤT CẢ</button>
+            <Link href="/expenses" className="text-primary font-label-md text-label-md underline uppercase">XEM TẤT CẢ</Link>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center py-2 border-b border-surface-variant">

@@ -4,16 +4,15 @@ import { useEffect } from 'react';
 export default function PwaRegistry() {
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      // Đăng ký service worker (file sw.js đã được tạo cục bộ ở thư mục public)
-      navigator.serviceWorker.register('/sw.js').then(
-        (registration) => {
-          console.log('Service Worker registration successful with scope: ', registration.scope);
-        },
-        (err) => {
-          console.log('Service Worker registration failed: ', err);
+      // Hủy đăng ký tất cả các Service Worker cũ để xoá bộ nhớ đệm
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+          console.log('SW unregistered to clear old cache: ', registration);
         }
-      );
+      });
     }
   }, []);
+
   return null;
 }
