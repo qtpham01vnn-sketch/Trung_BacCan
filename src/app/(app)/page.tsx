@@ -77,7 +77,7 @@ export default function DashboardPage() {
       if (error) throw error;
 
       // Initialize array for 7 days
-      const days = [];
+      const days: { dateStr: string; label: string; value: number }[] = [];
       const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
       let total = 0;
 
