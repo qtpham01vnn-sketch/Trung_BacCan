@@ -80,11 +80,28 @@ export default function InputHubPage() {
       Array.from(e.target.files).forEach(file => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setPhotos(prev => [...prev, {
-            id: uuidv4(),
-            preview: reader.result as string, // Base64
-            note: ""
-          }]);
+          // Compress image before saving
+          const img = new window.Image();
+          img.src = reader.result as string;
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const MAX_WIDTH = 1000; // max width for field photos
+            const scaleSize = MAX_WIDTH / img.width;
+            canvas.width = MAX_WIDTH;
+            canvas.height = img.height * scaleSize;
+            
+            const ctx = canvas.getContext("2d");
+            ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Export as JPEG with 0.7 quality to significantly reduce base64 size
+            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+            
+            setPhotos(prev => [...prev, {
+              id: uuidv4(),
+              preview: compressedBase64,
+              note: ""
+            }]);
+          };
         };
         reader.readAsDataURL(file);
       });
