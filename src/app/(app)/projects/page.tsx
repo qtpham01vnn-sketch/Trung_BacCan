@@ -123,11 +123,15 @@ export default function ProjectsPage() {
               >
                 {/* Thumbnail Header */}
                 <div 
-                  className="relative h-40 w-full border-b-2 border-on-surface bg-surface-container-highest cursor-pointer"
+                  className="relative h-40 w-full border-b-2 border-on-surface bg-black cursor-pointer overflow-hidden"
                   onClick={() => setSelectedImage(cardImg)}
                 >
-                  <Image src={cardImg} alt={project.name} fill className="object-cover object-center transition-transform duration-700 group-hover:scale-105" unoptimized />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                  {/* Blurred Background to fill space */}
+                  <Image src={cardImg} alt="" fill className="object-cover opacity-40 blur-sm scale-110" unoptimized />
+                  {/* Main Image (Uncropped) */}
+                  <Image src={cardImg} alt={project.name} fill className="object-contain transition-transform duration-700 group-hover:scale-105" unoptimized />
+                  
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                   {/* Status Badge moved to top of image */}
                   <div className="absolute top-3 left-3">
                     <span
@@ -233,15 +237,17 @@ export default function ProjectsPage() {
                 }
               }}
             >
-              {/* Image Upload Field */}
               <div className="space-y-2">
                 <label className="font-label-md text-on-surface-variant uppercase">Ảnh dự án (Tùy chọn)</label>
                 <div 
-                  className="w-full h-32 border-2 border-dashed border-on-surface bg-surface-container-lowest flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-low transition-colors relative overflow-hidden"
+                  className={`w-full h-40 border-2 border-dashed border-on-surface flex flex-col items-center justify-center cursor-pointer hover:opacity-90 transition-opacity relative overflow-hidden ${projectImageBase64 ? 'bg-black border-solid' : 'bg-surface-container-lowest hover:bg-surface-container-low'}`}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {projectImageBase64 ? (
-                    <Image src={projectImageBase64} alt="Preview" fill className="object-cover" unoptimized />
+                    <>
+                      <Image src={projectImageBase64} alt="" fill className="object-cover opacity-40 blur-sm scale-110" unoptimized />
+                      <Image src={projectImageBase64} alt="Preview" fill className="object-contain" unoptimized />
+                    </>
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
