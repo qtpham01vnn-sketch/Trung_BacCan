@@ -17,7 +17,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-all active:scale-95">
             menu
           </button>
-          <h1 className="font-headline-md text-headline-md font-bold text-primary">Trung Bắc Cạn</h1>
+          <div className="flex items-baseline gap-2">
+            <h1 className="font-headline-md text-headline-md font-bold text-primary">Trung Bắc Cạn</h1>
+            <span className="text-[10px] font-bold text-on-surface-variant opacity-60 tracking-wider">v1.0.1</span>
+          </div>
         </div>
         <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-all active:scale-95">
           sync
