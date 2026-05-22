@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-surface": "#191c1e",
+                        "on-primary-fixed-variant": "#783200",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#3a485b",
+                        "tertiary": "#515f74",
+                        "on-primary-fixed": "#341100",
+                        "on-tertiary-container": "#253345",
+                        "on-surface-variant": "#584237",
+                        "surface-bright": "#f7f9fb",
+                        "primary": "#9d4300",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "outline": "#8c7164",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-tint": "#9d4300",
+                        "on-secondary-container": "#5c647a",
+                        "tertiary-container": "#8d9bb2",
+                        "secondary": "#565e74",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#ffdbca",
+                        "on-primary-container": "#582200",
+                        "inverse-primary": "#ffb690",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed": "#0d1c2e",
+                        "tertiary-fixed": "#d5e3fc",
+                        "primary-container": "#f97316",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dae2fd",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#b9c7df",
+                        "outline-variant": "#e0c0b1",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-variant": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "tap-target-min": "48px",
+                        "margin-tablet": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .rugged-border {
+            border: 2px solid #191c1e;
+        }
+        .active-interaction:active {
+            opacity: 0.8;
+            transform: scale(0.95);
+            transition: all 0.1s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-16 bg-surface dark:bg-on-surface border-b-2 border-on-surface">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary active-interaction">menu</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Trung Bắc Cạn</h1>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim active-interaction">sync</button>
+</header>
+<main class="pt-20 px-4 space-y-6">
+<!-- Hero Section: Today Production & Active Projects -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-primary text-on-primary p-6 rounded-none rugged-border relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-lg text-label-lg opacity-90">Today Production</p>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-headline-lg text-headline-lg">1,240</span>
+<span class="font-headline-sm text-headline-sm">m³</span>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-md text-label-md">+12% from yesterday</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">precision_manufacturing</span>
+</div>
+</div>
+<div class="bg-surface-container-highest p-6 rounded-none rugged-border">
+<p class="font-label-lg text-label-lg text-on-surface-variant">Active Projects</p>
+<div class="mt-2 flex items-center justify-between">
+<span class="font-headline-lg text-headline-lg text-on-surface">08</span>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-on-secondary-fixed-variant flex items-center justify-center text-[10px] text-white">PJ</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary flex items-center justify-center text-[10px] text-white">TB</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-secondary flex items-center justify-center text-[10px] text-white">+6</div>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<span class="bg-primary-container text-on-primary-container px-2 py-1 font-label-md text-label-md">4 ON TRACK</span>
+<span class="bg-error-container text-on-error-container px-2 py-1 font-label-md text-label-md">1 ALERT</span>
+</div>
+</div>
+</section>
+<!-- Quick Action Grid -->
+<section>
+<h2 class="font-headline-sm text-headline-sm mb-4">Quick Tasks</h2>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<button class="flex flex-col items-center justify-center p-4 bg-white rugged-border active-interaction gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">add_box</span>
+<span class="font-label-lg text-label-lg">New Report</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-white rugged-border active-interaction gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">play_circle</span>
+<span class="font-label-lg text-label-lg">Start Shift</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-white rugged-border active-interaction gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">photo_camera</span>
+<span class="font-label-lg text-label-lg">Site Photo</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-white rugged-border active-interaction gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">engineering</span>
+<span class="font-label-lg text-label-lg">Safety Log</span>
+</button>
+</div>
+</section>
+<!-- Summary Cards -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Pending Approvals -->
+<div class="bg-white p-4 rugged-border">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-lg text-label-lg font-bold">Pending Approvals</h3>
+<span class="bg-amber-500 text-black px-2 py-0.5 font-label-md text-label-md">3 ACTION REQUIRED</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-2 bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<div>
+<p class="font-label-md text-label-md font-bold">Fuel Log - Excavator 04</p>
+<p class="text-[10px] opacity-70">Submitted 2h ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<div>
+<p class="font-label-md text-label-md font-bold">Site Entry - Zone B</p>
+<p class="text-[10px] opacity-70">Submitted 5h ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Recent Expenses -->
+<div class="bg-white p-4 rugged-border">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-lg text-label-lg font-bold">Recent Expenses</h3>
+<button class="text-primary font-label-md text-label-md underline">VIEW ALL</button>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center py-2 border-b border-surface-variant">
+<span class="font-body-md text-body-md">Diesel Refill (500L)</span>
+<span class="font-label-lg text-label-lg font-bold">12.4M VND</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-variant">
+<span class="font-body-md text-body-md">Hydraulic Hose Repair</span>
+<span class="font-label-lg text-label-lg font-bold">1.2M VND</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="font-body-md text-body-md">Site Maintenance Tools</span>
+<span class="font-label-lg text-label-lg font-bold">0.8M VND</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Volume Trend Chart -->
+<section class="bg-white p-6 rugged-border">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-sm text-headline-sm">Volume Trend</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Last 7 days production (m³)</p>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">8.4k</p>
+<p class="font-label-md text-label-md">TOTAL WEEKLY</p>
+</div>
+</div>
+<div class="flex items-end justify-between h-32 gap-2 px-2">
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[40%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">MON</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[60%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">TUE</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[85%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">WED</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[70%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">THU</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[95%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">FRI</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[30%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">SAT</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-surface-container-highest rugged-border h-[20%] hover:bg-primary-container transition-colors cursor-pointer"></div>
+<span class="text-[10px] font-bold">SUN</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-surface dark:bg-on-surface border-t-2 border-on-surface">
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold bg-primary-container dark:bg-on-primary-fixed-variant rounded-full px-4 py-1 active-interaction">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active-interaction">
+<span class="material-symbols-outlined" data-icon="construction">construction</span>
+<span class="font-label-md text-label-md">Projects</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active-interaction">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+<span class="font-label-md text-label-md">Input</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active-interaction">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant active-interaction">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-md text-label-md">More</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for chart bars
+        document.querySelectorAll('.w-full.rugged-border').forEach(bar => {
+            bar.addEventListener('click', () => {
+                // Reset others
+                document.querySelectorAll('.w-full.rugged-border').forEach(b => b.classList.replace('bg-primary-container', 'bg-surface-container-highest'));
+                // Highlight active
+                bar.classList.replace('bg-surface-container-highest', 'bg-primary-container');
+            });
+        });
+
+        // Simulating the "Sync" interaction
+        const syncBtn = document.querySelector('header button.material-symbols-outlined');
+        syncBtn.addEventListener('click', () => {
+            syncBtn.style.animation = 'spin 1s linear infinite';
+            setTimeout(() => {
+                syncBtn.style.animation = 'none';
+                alert('Data Synced Successfully');
+            }, 2000);
+        });
+
+        // Add spinning animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>
