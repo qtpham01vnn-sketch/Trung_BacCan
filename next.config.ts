@@ -23,4 +23,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default process.env.VERCEL === "1" ? nextConfig : withPWA(nextConfig);
