@@ -11,6 +11,7 @@ export default function DashboardPage() {
   const [activeChartBar, setActiveChartBar] = useState<number | null>(4); // default active T6
   const [syncing, setSyncing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [expenseSearchQuery, setExpenseSearchQuery] = useState("");
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -200,9 +201,9 @@ export default function DashboardPage() {
       </section>
 
       {/* Summary Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Pending Approvals / Recent Forms */}
-        <div className="bg-white p-4 rugged-border flex flex-col max-h-[600px]">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Column 1: Pending Approvals / Recent Forms */}
+        <div className="bg-white p-4 rugged-border flex flex-col h-[500px]">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-label-lg text-label-lg font-bold">Dữ liệu vừa đẩy lên</h3>
             <span className="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 font-label-md text-label-md uppercase font-bold">LIVE</span>
@@ -213,10 +214,10 @@ export default function DashboardPage() {
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
             <input 
               type="text" 
-              placeholder="Lọc báo cáo (VD: 97C, cát, tên người...)" 
+              placeholder="Lọc báo cáo (VD: 97C, cát...)" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border border-on-surface font-body-sm text-body-sm focus:outline-none focus:border-primary transition-all"
+              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-2 border-surface-variant font-body-sm text-body-sm focus:outline-none focus:border-primary transition-all"
             />
             {searchQuery && (
               <button 
@@ -334,39 +335,148 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Expenses */}
-        <div className="bg-white p-4 rugged-border">
+        {/* Column 2: Recent Expenses */}
+        <div className="bg-white p-4 rugged-border flex flex-col h-[500px]">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-label-lg text-label-lg font-bold">Chi phí gần đây</h3>
             <Link href="/expenses" className="text-primary font-label-md text-label-md underline uppercase">XEM TẤT CẢ</Link>
           </div>
-          <div className="space-y-2">
-            {recentForms.filter((f: any) => f.type === 'expense').length === 0 ? (
-              <p className="text-sm opacity-60 italic py-2">Chưa có chi phí nào...</p>
-            ) : (
-              recentForms
-                .filter((f: any) => f.type === 'expense')
-                .slice(0, 3)
-                .map((expense: any) => {
-                  const data = expense.form_data || {};
-                  return (
-                    <div key={expense.id} className="flex justify-between items-center py-2 border-b border-surface-variant last:border-0">
-                      <div className="flex flex-col">
-                        <span className="font-body-md text-body-md truncate max-w-[180px] sm:max-w-[200px]" title={data.description || data.category}>
-                          {data.category || 'Khác'} {data.description ? `- ${data.description}` : ''}
-                        </span>
-                        <span className="text-[10px] text-on-surface-variant opacity-70">
-                          {new Date(expense.created_at).toLocaleDateString('vi-VN')}
-                        </span>
-                      </div>
+
+          {/* Expense Search Bar */}
+          <div className="relative mb-4 flex-shrink-0">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+            <input 
+              type="text" 
+              placeholder="Lọc chi phí..." 
+              value={expenseSearchQuery}
+              onChange={(e) => setExpenseSearchQuery(e.target.value)}
+              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-2 border-surface-variant font-body-sm text-body-sm focus:outline-none focus:border-error transition-all"
+            />
+            {expenseSearchQuery && (
+              <button 
+                onClick={() => setExpenseSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-2 overflow-y-auto hide-scrollbar flex-1 pr-1 pb-2">
+            {(() => {
+              const expenses = recentForms.filter((f: any) => f.type === 'expense');
+              const filteredExpenses = expenses.filter((item: any) => {
+                if (!expenseSearchQuery) return true;
+                const query = expenseSearchQuery.toLowerCase();
+                const data = item.form_data || {};
+                return (data.category || '').toLowerCase().includes(query) || 
+                       (data.description || '').toLowerCase().includes(query) ||
+                       (data.amount || '').toString().includes(query);
+              });
+
+              if (expenses.length === 0) return <p className="text-sm opacity-60 italic py-2">Chưa có chi phí nào...</p>;
+              if (filteredExpenses.length === 0) return <p className="text-sm opacity-60 italic py-2 text-center mt-4">Không tìm thấy chi phí phù hợp</p>;
+
+              return filteredExpenses.map((expense: any) => {
+                const data = expense.form_data || {};
+                return (
+                  <div key={expense.id} className="flex flex-col py-3 px-3 bg-surface-container-lowest border-2 border-surface-variant hover:border-error transition-colors">
+                    <div className="flex justify-between items-start mb-1">
+                      <span className="font-label-md text-label-md uppercase font-bold text-on-surface max-w-[180px] line-clamp-1" title={data.category}>
+                        {data.category || 'Khác'}
+                      </span>
                       <span className="font-label-lg text-label-lg font-bold text-error whitespace-nowrap">
                         {data.amount} VNĐ
                       </span>
                     </div>
-                  );
-                })
-            )}
+                    {data.description && (
+                      <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-2">{data.description}</p>
+                    )}
+                    <span className="text-[10px] text-on-surface-variant opacity-70 mt-auto">
+                      {new Date(expense.created_at).toLocaleString('vi-VN')}
+                    </span>
+                  </div>
+                );
+              });
+            })()}
           </div>
+        </div>
+
+        {/* Column 3: Colorful Transport Stats Chart */}
+        <div className="bg-white p-4 rugged-border flex flex-col h-[500px]">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-label-lg text-label-lg font-bold">Thống kê Vận chuyển</h3>
+            <span className="material-symbols-outlined text-primary">local_shipping</span>
+          </div>
+
+          {(() => {
+            // Calculate transport stats
+            const transportForms = recentForms.filter((f: any) => f.type === 'transport');
+            const stats = transportForms.reduce((acc: Record<string, number>, curr: any) => {
+              const mat = curr.form_data?.material || 'Khác';
+              const trips = Number(curr.form_data?.trips) || 0;
+              acc[mat] = (acc[mat] || 0) + trips;
+              return acc;
+            }, {});
+
+            const totalTrips = Object.values(stats).reduce((sum: any, val: any) => sum + val, 0) as number;
+            
+            if (totalTrips === 0) {
+              return (
+                <div className="flex-1 flex flex-col items-center justify-center text-on-surface-variant opacity-60">
+                  <span className="material-symbols-outlined text-4xl mb-2">pie_chart</span>
+                  <p className="text-sm italic">Chưa có dữ liệu vận chuyển</p>
+                </div>
+              );
+            }
+
+            // Generate Conic Gradient
+            const colors = ['#f97316', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#eab308'];
+            let currentPercentage = 0;
+            const gradientStops = Object.entries(stats).map(([mat, trips], index) => {
+              const percentage = ((trips as number) / totalTrips) * 100;
+              const color = colors[index % colors.length];
+              const stop = `${color} ${currentPercentage}% ${currentPercentage + percentage}%`;
+              currentPercentage += percentage;
+              return { mat, trips, color, stop, percentage };
+            });
+
+            const conicGradient = `conic-gradient(${gradientStops.map(s => s.stop).join(', ')})`;
+
+            return (
+              <div className="flex flex-col flex-1">
+                {/* CSS Doughnut Chart */}
+                <div className="flex justify-center items-center py-6 relative">
+                  <div 
+                    className="w-48 h-48 rounded-full shadow-inner flex items-center justify-center transition-transform hover:scale-105 duration-300"
+                    style={{ background: conicGradient }}
+                  >
+                    {/* Inner circle for Doughnut effect */}
+                    <div className="w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
+                      <span className="font-headline-lg text-headline-lg font-bold text-on-surface">{totalTrips}</span>
+                      <span className="font-label-sm text-label-sm uppercase text-on-surface-variant">Chuyến</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Legend */}
+                <div className="mt-auto space-y-3 px-2 overflow-y-auto max-h-[150px] hide-scrollbar">
+                  {gradientStops.sort((a, b) => (b.trips as number) - (a.trips as number)).map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-none shadow-sm" style={{ backgroundColor: item.color }}></div>
+                        <span className="font-body-sm text-body-sm group-hover:font-bold transition-all">{item.mat}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-label-md font-bold">{item.trips}</span>
+                        <span className="text-[10px] text-on-surface-variant opacity-60 w-8 text-right">({Math.round(item.percentage)}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </section>
 
