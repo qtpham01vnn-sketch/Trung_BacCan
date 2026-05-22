@@ -74,65 +74,75 @@ export default function ProjectsPage() {
             Không có dự án nào
           </div>
         ) : (
-          filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-surface-container-lowest border-2 border-on-surface p-stack-md flex flex-col justify-between min-h-[180px] hover:border-primary-container transition-colors group"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-headline-sm text-headline-sm text-on-surface mb-1">
-                    {project.name}
-                  </h3>
-                  <span
-                    className={`inline-block px-3 py-1 font-label-lg rounded-none text-white ${
-                      project.status === "Đang chạy"
-                        ? "bg-[#10b981]"
-                        : "bg-on-secondary-fixed-variant"
-                    }`}
-                  >
-                    {project.status}
-                  </span>
-                </div>
-                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container transition-colors">
-                  {project.status === "Đang chạy" ? "construction" : "check_circle"}
-                </span>
-              </div>
-              <div className="space-y-stack-sm">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-label-md text-on-surface-variant">Tiến độ</span>
-                  <span className="font-label-lg text-primary">{project.progress}%</span>
-                </div>
-                <div className="w-full bg-surface-container-highest h-3 border border-on-surface">
-                  <div
-                    className={`h-full transition-all duration-1000 ${
-                      project.status === "Đang chạy" ? "bg-primary-container" : "bg-on-secondary-fixed-variant"
-                    }`}
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
-                </div>
-                <div className="flex items-center gap-2 mt-4 text-on-surface-variant">
-                  <span className="material-symbols-outlined text-[18px]">group</span>
-                  <span className="font-label-lg">{project.members} Thành viên</span>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+          filteredProjects.map((project) => {
+            const CONSTRUCTION_IMAGES = [
+              "https://images.unsplash.com/photo-1541888081622-15cb3a58e803?q=80&w=600&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=600&auto=format&fit=crop",
+              "https://lh3.googleusercontent.com/aida-public/AB6AXuDnPbfwL-RIwldynojgp-7-CVm7AtjJnmhm1GsOI5YZzX2woDUux0X9veTq0JWnKwJ8MF0NRNV_yp6E-GdadUe_FqLULF-RtAgsKzhnAMM5RaF0B2TlIsvamnsScW-2u-VJom59P7Q4Zo2_PjI5m9C9AoxVcwZMIpmmO76n7mZjJN-P8vF6aapfsC9_HajCKojCg0p-wcxZoGm_xEHU7nNcTA-er9uM6KIDIaJ9r311QbpbEhs5gLyY_ll6h38aWBGlcrVbIOd7HHk"
+            ];
+            // Deterministic random based on ID or Name so it stays consistent
+            const imgIndex = project.id.charCodeAt(0) % CONSTRUCTION_IMAGES.length;
+            const cardImg = CONSTRUCTION_IMAGES[imgIndex];
 
-        {/* Image Card for Visual Interest */}
-        <div className="relative overflow-hidden border-2 border-on-surface md:col-span-1 h-[180px]">
-          <Image
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnPbfwL-RIwldynojgp-7-CVm7AtjJnmhm1GsOI5YZzX2woDUux0X9veTq0JWnKwJ8MF0NRNV_yp6E-GdadUe_FqLULF-RtAgsKzhnAMM5RaF0B2TlIsvamnsScW-2u-VJom59P7Q4Zo2_PjI5m9C9AoxVcwZMIpmmO76n7mZjJN-P8vF6aapfsC9_HajCKojCg0p-wcxZoGm_xEHU7nNcTA-er9uM6KIDIaJ9r311QbpbEhs5gLyY_ll6h38aWBGlcrVbIOd7HHk"
-            alt="Overview"
-            fill
-            className="object-cover"
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 to-transparent flex items-end p-stack-md">
-            <p className="text-white font-label-lg">Tổng quan hàng ngày: TBC Khu vực 4</p>
-          </div>
-        </div>
+            return (
+              <div
+                key={project.id}
+                className="bg-surface-container-lowest border-2 border-on-surface flex flex-col min-h-[260px] hover:border-primary-container transition-colors group overflow-hidden"
+              >
+                {/* Thumbnail Header */}
+                <div className="relative h-32 w-full border-b-2 border-on-surface bg-surface-container-highest">
+                  <Image src={cardImg} alt={project.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                  {/* Status Badge moved to top of image */}
+                  <div className="absolute top-3 left-3">
+                    <span
+                      className={`inline-block px-3 py-1 font-label-md rounded-none text-white shadow-sm ${
+                        project.status === "Đang chạy"
+                          ? "bg-[#10b981]"
+                          : "bg-on-surface"
+                      }`}
+                    >
+                      {project.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-stack-md flex flex-col justify-between flex-1">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface line-clamp-2 pr-2">
+                      {project.name}
+                    </h3>
+                    <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container transition-colors shrink-0">
+                      {project.status === "Đang chạy" ? "construction" : "check_circle"}
+                    </span>
+                  </div>
+
+                  <div className="space-y-stack-sm mt-auto">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-label-md text-on-surface-variant">Tiến độ</span>
+                      <span className="font-label-lg text-primary">{project.progress}%</span>
+                    </div>
+                    <div className="w-full bg-surface-container-highest h-3 border border-on-surface">
+                      <div
+                        className={`h-full transition-all duration-1000 ${
+                          project.status === "Đang chạy" ? "bg-primary-container" : "bg-on-secondary-fixed-variant"
+                        }`}
+                        style={{ width: `${project.progress}%` }}
+                      ></div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-4 text-on-surface-variant">
+                      <span className="material-symbols-outlined text-[18px]">group</span>
+                      <span className="font-label-lg">{project.members} Thành viên</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Floating Action Button */}
