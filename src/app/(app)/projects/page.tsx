@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/client";
@@ -11,6 +11,7 @@ type Project = {
   status: "Đang chạy" | "Hoàn thành";
   progress: number;
   members: number;
+  image_data?: string;
 };
 
 export default function ProjectsPage() {
@@ -18,6 +19,9 @@ export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [projectImageBase64, setProjectImageBase64] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const supabase = createClient();
   const queryClient = useQueryClient();
 
@@ -40,6 +44,31 @@ export default function ProjectsPage() {
   const filteredProjects = projects.filter((p) =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new window.Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 800; // Nén ảnh để lưu cho nhẹ
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          setProjectImageBase64(compressedBase64);
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
@@ -83,9 +112,9 @@ export default function ProjectsPage() {
               "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=600&auto=format&fit=crop",
               "https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?q=80&w=600&auto=format&fit=crop"
             ];
-            // Deterministic random based on ID or Name so it stays consistent
             const imgIndex = project.id.charCodeAt(0) % CONSTRUCTION_IMAGES.length;
-            const cardImg = CONSTRUCTION_IMAGES[imgIndex];
+            // Dùng ảnh user up (image_data) nếu có, không thì xài ảnh mặc định
+            const cardImg = project.image_data || CONSTRUCTION_IMAGES[imgIndex];
 
             return (
               <div
@@ -94,10 +123,10 @@ export default function ProjectsPage() {
               >
                 {/* Thumbnail Header */}
                 <div 
-                  className="relative h-32 w-full border-b-2 border-on-surface bg-surface-container-highest cursor-pointer"
+                  className="relative h-40 w-full border-b-2 border-on-surface bg-surface-container-highest cursor-pointer"
                   onClick={() => setSelectedImage(cardImg)}
                 >
-                  <Image src={cardImg} alt={project.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized />
+                  <Image src={cardImg} alt={project.name} fill className="object-cover object-center transition-transform duration-700 group-hover:scale-105" unoptimized />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                   {/* Status Badge moved to top of image */}
                   <div className="absolute top-3 left-3">
@@ -157,7 +186,10 @@ export default function ProjectsPage() {
 
       {/* Floating Action Button */}
       <button 
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          setProjectImageBase64("");
+          setIsModalOpen(true);
+        }}
         className="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container flex items-center justify-center rounded-none shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all z-40"
       >
         <span className="material-symbols-outlined text-[32px] font-bold">add</span>
@@ -166,8 +198,8 @@ export default function ProjectsPage() {
       {/* Add Project Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-surface w-full max-w-md border-2 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] animate-in zoom-in-95">
-            <div className="p-4 border-b-2 border-on-surface flex justify-between items-center bg-surface-container">
+          <div className="bg-surface w-full max-w-md border-2 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+            <div className="p-4 border-b-2 border-on-surface flex justify-between items-center bg-surface-container sticky top-0 z-10">
               <h2 className="font-headline-sm text-headline-sm uppercase">Dự án mới</h2>
               <button onClick={() => setIsModalOpen(false)} className="hover:text-error transition-colors">
                 <span className="material-symbols-outlined">close</span>
@@ -184,21 +216,48 @@ export default function ProjectsPage() {
                   name: formData.get('name'),
                   status: formData.get('status'),
                   progress: Number(formData.get('progress')),
-                  members: Number(formData.get('members'))
+                  members: Number(formData.get('members')),
+                  image_data: projectImageBase64 || null
                 };
 
                 const { error } = await supabase.from('projects').insert(newProject);
                 setIsSubmitting(false);
 
                 if (error) {
-                  alert('Lỗi khi thêm dự án: ' + error.message);
+                  alert('Lỗi khi thêm dự án: Bạn cần tạo cột image_data (kiểu text) trong bảng projects trên Supabase trước khi up ảnh! Chi tiết: ' + error.message);
                 } else {
                   queryClient.invalidateQueries({ queryKey: ['projects'] });
                   queryClient.invalidateQueries({ queryKey: ['active_projects_count'] });
                   setIsModalOpen(false);
+                  setProjectImageBase64("");
                 }
               }}
             >
+              {/* Image Upload Field */}
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant uppercase">Ảnh dự án (Tùy chọn)</label>
+                <div 
+                  className="w-full h-32 border-2 border-dashed border-on-surface bg-surface-container-lowest flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-low transition-colors relative overflow-hidden"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {projectImageBase64 ? (
+                    <Image src={projectImageBase64} alt="Preview" fill className="object-cover" unoptimized />
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
+                      <span className="font-label-md text-on-surface-variant">Bấm để chọn ảnh</span>
+                    </>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="font-label-md text-on-surface-variant uppercase">Tên dự án</label>
                 <input name="name" required className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary" placeholder="Ví dụ: Kè bờ sông A..." />
