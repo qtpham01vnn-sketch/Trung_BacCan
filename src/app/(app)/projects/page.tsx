@@ -17,6 +17,7 @@ export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const supabase = createClient();
   const queryClient = useQueryClient();
 
@@ -80,7 +81,7 @@ export default function ProjectsPage() {
               "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop",
               "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop",
               "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=600&auto=format&fit=crop",
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuDnPbfwL-RIwldynojgp-7-CVm7AtjJnmhm1GsOI5YZzX2woDUux0X9veTq0JWnKwJ8MF0NRNV_yp6E-GdadUe_FqLULF-RtAgsKzhnAMM5RaF0B2TlIsvamnsScW-2u-VJom59P7Q4Zo2_PjI5m9C9AoxVcwZMIpmmO76n7mZjJN-P8vF6aapfsC9_HajCKojCg0p-wcxZoGm_xEHU7nNcTA-er9uM6KIDIaJ9r311QbpbEhs5gLyY_ll6h38aWBGlcrVbIOd7HHk"
+              "https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?q=80&w=600&auto=format&fit=crop"
             ];
             // Deterministic random based on ID or Name so it stays consistent
             const imgIndex = project.id.charCodeAt(0) % CONSTRUCTION_IMAGES.length;
@@ -92,7 +93,10 @@ export default function ProjectsPage() {
                 className="bg-surface-container-lowest border-2 border-on-surface flex flex-col min-h-[260px] hover:border-primary-container transition-colors group overflow-hidden"
               >
                 {/* Thumbnail Header */}
-                <div className="relative h-32 w-full border-b-2 border-on-surface bg-surface-container-highest">
+                <div 
+                  className="relative h-32 w-full border-b-2 border-on-surface bg-surface-container-highest cursor-pointer"
+                  onClick={() => setSelectedImage(cardImg)}
+                >
                   <Image src={cardImg} alt={project.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                   {/* Status Badge moved to top of image */}
@@ -106,6 +110,12 @@ export default function ProjectsPage() {
                     >
                       {project.status}
                     </span>
+                  </div>
+                  {/* Zoom icon on hover */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="bg-black/50 p-2 rounded-full text-white">
+                      <span className="material-symbols-outlined">zoom_in</span>
+                    </div>
                   </div>
                 </div>
 
@@ -220,6 +230,33 @@ export default function ProjectsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Image Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 cursor-pointer animate-in fade-in"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative w-full max-w-4xl aspect-[4/3] max-h-[80vh]">
+            <Image 
+              src={selectedImage} 
+              alt="Phóng to" 
+              fill 
+              className="object-contain" 
+              unoptimized 
+            />
+            <button 
+              className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/80 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
           </div>
         </div>
       )}
