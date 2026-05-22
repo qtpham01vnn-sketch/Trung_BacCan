@@ -5,6 +5,8 @@ import clsx from "clsx";
 import SyncProvider from "@/components/SyncProvider";
 import QueryProvider from "@/components/QueryProvider";
 
+import PwaRegistry from "@/components/PwaRegistry";
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const viewport: Viewport = {
@@ -49,6 +51,7 @@ export default function RootLayout({
         }}></div>
         <QueryProvider>
           <SyncProvider>
+            <PwaRegistry />
             {children}
           </SyncProvider>
         </QueryProvider>
