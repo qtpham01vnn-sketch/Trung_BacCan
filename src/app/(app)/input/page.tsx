@@ -20,7 +20,7 @@ export default function InputHubPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      const type = params.get("type") as FormType;
+      const type = params.get("type");
       if (type && ["attendance", "hours", "transport", "volume", "expense", "photo"].includes(type)) {
         if (type === "photo") {
           // If type is photo, just scroll to photo section since it doesn't have an active form state
@@ -28,7 +28,7 @@ export default function InputHubPage() {
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
           }, 300);
         } else {
-          setActiveForm(type);
+          setActiveForm(type as FormType);
         }
       }
     }
