@@ -90,7 +90,7 @@ export default function InputHubPage() {
         id: uuidv4(),
         workspace_id: "default-workspace",
         project_id: "default-project",
-        type: "photo" as FormType, // Use photo as type
+        type: "photo", // Use photo as type
         title: `Ảnh hiện trường - ${new Date().toLocaleDateString('vi-VN')}`,
         form_data: {
           photoUrl: photo.preview, 
