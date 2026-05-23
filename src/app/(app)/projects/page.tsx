@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/client";
 
@@ -155,9 +156,12 @@ export default function ProjectsPage() {
                 {/* Content */}
                 <div className="p-stack-md flex flex-col justify-between flex-1">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface line-clamp-2 pr-2">
-                      {project.name}
-                    </h3>
+                    <Link href={`/projects/${project.id}`} className="hover:text-primary transition-colors">
+                      <h3 className="font-headline-sm text-headline-sm text-on-surface line-clamp-2 pr-2">
+                        {project.name}
+                        <span className="material-symbols-outlined align-middle ml-1 text-[20px]">open_in_new</span>
+                      </h3>
+                    </Link>
                     <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container transition-colors shrink-0">
                       {project.status === "Đang chạy" ? "construction" : "check_circle"}
                     </span>

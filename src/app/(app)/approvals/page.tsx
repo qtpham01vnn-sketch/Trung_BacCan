@@ -18,12 +18,26 @@ export default function ApprovalsPage() {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const [selectedForm, setSelectedForm] = useState<any>(null);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  
+  // Filter states
+  const [filterProject, setFilterProject] = useState<string>('all');
+  const [filterType, setFilterType] = useState<string>('all');
+
+  // Lấy danh sách dự án cho bộ lọc
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects_list_filter'],
+    queryFn: async () => {
+      const { data } = await supabase.from('projects').select('id, name');
+      return data || [];
+    }
+  });
 
   // Lấy dữ liệu chờ duyệt (status = 'synced')
   const { data: pendingForms = [], isLoading, error } = useQuery({
-    queryKey: ['pending_approvals'],
+    queryKey: ['pending_approvals', filterProject, filterType],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('field_forms')
         .select(`
           id, type, title, form_data, created_at, project_id
@@ -31,6 +45,14 @@ export default function ApprovalsPage() {
         .eq('status', 'synced')
         .order('created_at', { ascending: false });
         
+      if (filterProject !== 'all') {
+        query = query.eq('project_id', filterProject);
+      }
+      if (filterType !== 'all') {
+        query = query.eq('type', filterType);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     }
@@ -167,6 +189,35 @@ export default function ApprovalsPage() {
           DUYỆT TẤT CẢ ({pendingForms.length})
         </button>
       </header>
+
+      {/* Bộ Lọc */}
+      <div className="flex gap-3 mb-6">
+        <select
+          value={filterProject}
+          onChange={(e) => setFilterProject(e.target.value)}
+          className="flex-1 h-12 px-3 bg-surface-container-lowest border-2 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+        >
+          <option value="all">-- Tất cả Dự án --</option>
+          <option value="default-project">Dự án mặc định</option>
+          {projects.map((p: any) => (
+            <option key={p.id} value={p.id}>{p.name}</option>
+          ))}
+        </select>
+        
+        <select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+          className="flex-1 h-12 px-3 bg-surface-container-lowest border-2 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+        >
+          <option value="all">-- Tất cả Loại báo cáo --</option>
+          <option value="hours">Giờ máy</option>
+          <option value="attendance">Điểm danh</option>
+          <option value="transport">Chuyến xe</option>
+          <option value="volume">Sản lượng</option>
+          <option value="expense">Chi phí</option>
+          <option value="photo">Hình ảnh</option>
+        </select>
+      </div>
 
       {isLoading ? (
         <div className="flex justify-center py-12">
