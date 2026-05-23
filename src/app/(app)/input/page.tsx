@@ -50,9 +50,9 @@ export default function InputHubPage() {
 
   // Load Master Data offline
   const masterDataList = useLiveQuery(() => db.masterData.toArray(), []) || [];
-  const machines = masterDataList.filter((m) => m.type === "machine");
-  const vehicles = masterDataList.filter((m) => m.type === "vehicle");
-  const materials = masterDataList.filter((m) => m.type === "material");
+  const machines = masterDataList.filter((m) => m.type === "machine" && m.is_active !== false);
+  const vehicles = masterDataList.filter((m) => m.type === "vehicle" && m.is_active !== false);
+  const materials = masterDataList.filter((m) => m.type === "material" && m.is_active !== false);
 
   const triggerVibration = () => {
     if (typeof window !== "undefined" && window.navigator.vibrate) {
