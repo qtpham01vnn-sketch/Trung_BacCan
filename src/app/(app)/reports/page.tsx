@@ -220,7 +220,7 @@ export default function AnalyticsPage() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: number) => formatVND(value)} contentStyle={{fontWeight: 'bold', border: '4px solid black', borderRadius: 0}} />
+                      <Tooltip formatter={(value: any) => formatVND(Number(value))} contentStyle={{fontWeight: 'bold', border: '4px solid black', borderRadius: 0}} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
