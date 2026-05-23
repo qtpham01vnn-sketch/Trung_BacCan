@@ -34,17 +34,26 @@ export interface MasterData {
   is_active: boolean;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+}
+
 const db = new Dexie('TrungBacCanDB') as Dexie & {
   fieldForms: EntityTable<FieldForm, 'id'>;
   syncQueue: EntityTable<SyncQueueItem, 'id'>;
   masterData: EntityTable<MasterData, 'id'>;
+  projects: EntityTable<Project, 'id'>;
 };
 
 // Define schema
-db.version(2).stores({
+db.version(3).stores({
   fieldForms: 'id, workspace_id, project_id, type, status, created_at, server_id', // Primary key and indexed props
   syncQueue: 'id, form_id, status, created_at',
-  masterData: 'id, type, project_id'
+  masterData: 'id, type, project_id',
+  projects: 'id'
+}).upgrade(tx => {
+  // Add projects table in version 3
 });
 
 export { db };

@@ -20,13 +20,7 @@ export default function InputHubPage() {
   const role = useAuthStore((state) => state.role);
 
   const supabase = createClient();
-  const { data: projects = [] } = useQuery({
-    queryKey: ['projects_list_input'],
-    queryFn: async () => {
-      const { data } = await supabase.from('projects').select('id, name');
-      return (data || []) as { id: string; name: string }[];
-    }
-  });
+  const projects = useLiveQuery(() => db.projects.toArray(), []) || [];
 
   useEffect(() => {
     if (typeof window !== "undefined") {

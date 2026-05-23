@@ -82,9 +82,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-16 bg-surface border-b-2 border-on-surface shadow-sm">
         <div className="flex items-center gap-4">
-          <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-all active:scale-95">
-            menu
-          </button>
+          {pathname !== "/" ? (
+            <button 
+              onClick={() => router.back()} 
+              className="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-all active:scale-95"
+            >
+              arrow_back
+            </button>
+          ) : (
+            <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-all active:scale-95">
+              menu
+            </button>
+          )}
           <div className="flex items-baseline gap-2">
             <h1 className="font-headline-md text-headline-md font-bold text-primary">Trung Bắc Cạn</h1>
             <span className="text-[10px] font-bold text-on-surface-variant opacity-60 tracking-wider hidden sm:inline">v1.0.1</span>

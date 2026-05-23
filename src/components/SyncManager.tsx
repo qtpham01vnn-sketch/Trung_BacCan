@@ -47,6 +47,31 @@ export function SyncManager() {
   }, []);
 
   useEffect(() => {
+    // Pull master data and projects for offline use
+    const pullMasterData = async () => {
+      if (!isOnline) return;
+      try {
+        const { data: projectsData } = await supabase.from('projects').select('id, name');
+        if (projectsData) {
+          await db.projects.bulkPut(projectsData);
+        }
+
+        const { data: masterData } = await supabase.from('master_data').select('*');
+        if (masterData) {
+          await db.masterData.bulkPut(masterData);
+        }
+      } catch (e) {
+        console.error("Failed to pull master data:", e);
+      }
+    };
+
+    pullMasterData();
+    // Refresh master data every hour
+    const interval = setInterval(pullMasterData, 3600000);
+    return () => clearInterval(interval);
+  }, [isOnline, supabase]);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout;
 
     const syncData = async () => {
