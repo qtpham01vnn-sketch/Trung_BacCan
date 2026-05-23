@@ -296,9 +296,15 @@ export default function DashboardPage() {
                 const filteredForms = recentForms.filter((item: any) => {
                   if (!searchQuery) return true;
                   const query = searchQuery.toLowerCase();
-                  const dataStr = JSON.stringify(item.form_data).toLowerCase();
-                  const titleStr = item.title.toLowerCase();
-                  return titleStr.includes(query) || dataStr.includes(query);
+                  const titleStr = (item.title || "").toLowerCase();
+                  
+                  // Only search readable values, ignore keys and URLs (like photoUrl)
+                  const dataValues = Object.entries(item.form_data || {})
+                    .filter(([key]) => key !== 'photoUrl' && key !== 'id')
+                    .map(([_, val]) => String(val).toLowerCase())
+                    .join(" ");
+
+                  return titleStr.includes(query) || dataValues.includes(query);
                 });
 
                 if (filteredForms.length === 0) {
