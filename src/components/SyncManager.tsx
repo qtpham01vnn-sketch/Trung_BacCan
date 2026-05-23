@@ -215,10 +215,10 @@ export function SyncManager() {
     textColor = "text-emerald-800";
   } else if (syncStatus === "error") {
     showToast = true;
-    toastColor = "bg-error-container";
-    toastIcon = "warning";
-    toastText = "Đồng bộ lỗi, đang thử lại...";
-    textColor = "text-on-error-container";
+    toastColor = "bg-surface-container-highest";
+    toastIcon = "cloud_sync";
+    toastText = "Đang chờ kết nối mạng để đồng bộ...";
+    textColor = "text-on-surface-variant";
   }
 
   if (!showToast) return null;

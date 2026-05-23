@@ -61,7 +61,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Protect routes based on role
   useEffect(() => {
     if (mounted && role === "field_worker") {
-      const restrictedRoutes = ["/reports", "/projects", "/more", "/approvals"];
+      const restrictedRoutes = ["/reports", "/projects", "/approvals"];
       if (restrictedRoutes.some(r => pathname.startsWith(r))) {
         router.replace("/input");
       }
@@ -183,18 +183,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </Link>
         )}
 
-        {role === "admin" && (
-          <Link
-            href="/more"
-            className={clsx(
-              "flex flex-col items-center justify-center duration-150 group",
-              pathname === "/more" ? "text-primary" : "text-on-surface-variant hover:bg-surface-container"
-            )}
-          >
-            <span className="material-symbols-outlined group-hover:scale-110">more_horiz</span>
-            <span className="font-label-md text-label-md">Thêm</span>
-          </Link>
-        )}
+        <Link
+          href="/more"
+          className={clsx(
+            "flex flex-col items-center justify-center duration-150 group",
+            pathname === "/more" ? "text-primary" : "text-on-surface-variant hover:bg-surface-container"
+          )}
+        >
+          <span className="material-symbols-outlined group-hover:scale-110">more_horiz</span>
+          <span className="font-label-md text-label-md">Thêm</span>
+        </Link>
       </nav>
     </div>
   );
