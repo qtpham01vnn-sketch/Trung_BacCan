@@ -225,7 +225,7 @@ export default function InputHubPage() {
             <select
               {...register("project_id", { required: true })}
               defaultValue="default-project"
-              className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+              className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
             >
               <option value="default-project">Dự án mặc định (Tạm thời)</option>
               {projects.map(p => (
@@ -241,7 +241,7 @@ export default function InputHubPage() {
                 </label>
                 <select
                   {...register("machineId", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn Máy Xúc / Thiết Bị --</option>
                   {machines.map(m => (
@@ -259,7 +259,7 @@ export default function InputHubPage() {
                   type="number"
                   step="0.5"
                   {...register("hours", { required: true, min: 0.5 })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   placeholder="0.0"
                 />
                 {errors.hours && <span className="text-error text-sm">Số giờ không hợp lệ</span>}
@@ -276,7 +276,7 @@ export default function InputHubPage() {
                 <input
                   type="number"
                   {...register("workerCount", { required: true, min: 1 })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   placeholder="0"
                 />
               </div>
@@ -286,7 +286,7 @@ export default function InputHubPage() {
                 </label>
                 <textarea
                   {...register("notes")}
-                  className="w-full p-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   rows={4}
                   placeholder="Ghi chú thêm..."
                 />
@@ -302,7 +302,7 @@ export default function InputHubPage() {
                 </label>
                 <select
                   {...register("vehicleId", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn Mã Xe --</option>
                   {vehicles.map(v => (
@@ -319,7 +319,7 @@ export default function InputHubPage() {
                 <input
                   type="number"
                   {...register("trips", { required: true, min: 1 })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   placeholder="0"
                 />
               </div>
@@ -330,7 +330,7 @@ export default function InputHubPage() {
                 </label>
                 <select
                   {...register("material", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn vật liệu --</option>
                   {materials.map(m => (
@@ -345,7 +345,7 @@ export default function InputHubPage() {
                 </label>
                 <textarea
                   {...register("notes")}
-                  className="w-full p-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   rows={2}
                   placeholder="Ghi chú thêm..."
                 />
@@ -364,12 +364,12 @@ export default function InputHubPage() {
                     type="number"
                     step="0.1"
                     {...register("quantity", { required: true, min: 0.1 })}
-                    className="flex-1 h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                    className="flex-1 h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                     placeholder="0.0"
                   />
                   <select
                     {...register("unit", { required: true })}
-                    className="w-24 h-14 px-2 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none text-center"
+                    className="w-24 h-14 px-2 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none text-center"
                   >
                     <option value="m3">m³</option>
                     <option value="tấn">Tấn</option>
@@ -384,7 +384,7 @@ export default function InputHubPage() {
                 </label>
                 <input
                   {...register("location", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   placeholder="Ví dụ: Phân khu A, Kè Bắc..."
                 />
               </div>
@@ -394,7 +394,7 @@ export default function InputHubPage() {
                 </label>
                 <textarea
                   {...register("notes")}
-                  className="w-full p-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   rows={2}
                   placeholder="Ghi chú thêm..."
                 />
@@ -411,7 +411,7 @@ export default function InputHubPage() {
                 <input
                   type="text"
                   {...register("amount", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   placeholder="Ví dụ: 500000"
                 />
               </div>
@@ -422,7 +422,7 @@ export default function InputHubPage() {
                 </label>
                 <select
                   {...register("category", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn hạng mục --</option>
                   <option value="Xăng dầu">Đổ xăng / dầu</option>
@@ -439,7 +439,7 @@ export default function InputHubPage() {
                 </label>
                 <textarea
                   {...register("description", { required: true })}
-                  className="w-full p-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
+                  className="w-full p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
                   rows={3}
                   placeholder="Chi tiết khoản chi..."
                 />

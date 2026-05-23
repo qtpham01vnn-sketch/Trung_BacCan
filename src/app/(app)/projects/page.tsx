@@ -80,7 +80,7 @@ export default function ProjectsPage() {
             search
           </span>
           <input
-            className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-2 border-on-surface rounded-none focus:ring-0 focus:border-primary-container font-body-md transition-colors placeholder:text-on-surface-variant"
+            className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] rounded-none focus:ring-0 focus:border-primary-container font-body-md transition-all placeholder:text-on-surface-variant cursor-pointer"
             placeholder="Tìm tên dự án..."
             type="text"
             value={searchTerm}
@@ -120,7 +120,7 @@ export default function ProjectsPage() {
             return (
               <div
                 key={project.id}
-                className="bg-surface-container-lowest border-2 border-on-surface flex flex-col min-h-[260px] hover:border-primary-container transition-colors group overflow-hidden"
+                className="bg-surface-container-lowest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] flex flex-col min-h-[260px] hover:border-primary-container transition-all duration-200 group overflow-hidden cursor-pointer"
               >
                 {/* Thumbnail Header */}
                 <div 
@@ -187,7 +187,7 @@ export default function ProjectsPage() {
                     
                     {/* Big Action Button */}
                     <Link href={`/projects/${project.id}`} className="block w-full">
-                      <button className="w-full h-12 bg-surface-container border-2 border-on-surface flex items-center justify-center gap-2 font-bold font-label-md hover:bg-primary hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(25,28,30,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                      <button className="w-full h-12 bg-surface-container border-4 border-on-surface flex items-center justify-center gap-2 font-bold font-label-md hover:bg-primary hover:text-white transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none">
                         <span className="material-symbols-outlined text-[20px]">manage_search</span>
                         XEM LỊCH SỬ & CHI TIẾT
                       </button>
@@ -206,7 +206,7 @@ export default function ProjectsPage() {
           setProjectImageBase64("");
           setIsModalOpen(true);
         }}
-        className="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container flex items-center justify-center rounded-none shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all z-40"
+        className="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container flex items-center justify-center rounded-none border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all z-40"
       >
         <span className="material-symbols-outlined text-[32px] font-bold">add</span>
       </button>
@@ -214,7 +214,7 @@ export default function ProjectsPage() {
       {/* Add Project Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-surface w-full max-w-md border-2 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface w-full max-w-md border-4 border-on-surface shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b-2 border-on-surface flex justify-between items-center bg-surface-container sticky top-0 z-10">
               <h2 className="font-headline-sm text-headline-sm uppercase">Dự án mới</h2>
               <button onClick={() => setIsModalOpen(false)} className="hover:text-error transition-colors">

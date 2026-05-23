@@ -113,7 +113,7 @@ export default function AnalyticsPage() {
           <select 
             value={timeFilter} 
             onChange={e => setTimeFilter(e.target.value as any)}
-            className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none"
+            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none"
           >
             <option value="today">Hôm nay</option>
             <option value="week">Tuần này</option>
@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
           <select 
             value={projectIdFilter} 
             onChange={e => setProjectIdFilter(e.target.value)}
-            className="w-full h-12 px-3 border-2 border-on-surface bg-surface-container-lowest focus:outline-none"
+            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none"
           >
             <option value="all">Tất cả dự án</option>
             <option value="default-project">Dự án mặc định (Chưa gán)</option>
@@ -155,7 +155,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Charts */}
-          <div className="bg-surface-container-lowest border-2 border-on-surface p-4 mt-8">
+          <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 mt-8 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all duration-300">
             <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-primary">Biểu đồ Chuyến Xe (Cột)</h3>
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -170,7 +170,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest border-2 border-on-surface p-4 mt-4">
+          <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 mt-4 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all duration-300">
             <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-[#006a60]">Biểu đồ Giờ Máy (Đường)</h3>
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -190,7 +190,7 @@ export default function AnalyticsPage() {
             <h3 className="font-headline-sm mb-4 uppercase tracking-tight">Khai báo gần nhất</h3>
             <div className="space-y-3">
               {filteredForms.slice(-10).reverse().map(form => (
-                <div key={form.id} className="p-3 bg-surface-container-high border-2 border-on-surface">
+                <div key={form.id} className="p-3 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 cursor-pointer">
                   <div className="flex justify-between mb-1">
                     <span className="font-bold uppercase text-sm">
                       {form.type === 'transport' ? '🚛 Chuyến Xe' : form.type === 'machine_hours' ? '🚜 Giờ Máy' : '📸 Hình Ảnh'}

@@ -275,7 +275,7 @@ export default function DashboardPage() {
               placeholder="Lọc báo cáo (VD: 97C, cát...)" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-2 border-surface-variant font-body-sm text-body-sm focus:outline-none focus:border-primary transition-all"
+              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] font-body-sm text-body-sm focus:outline-none focus:border-primary transition-all cursor-pointer"
             />
             {searchQuery && (
               <button 
@@ -408,7 +408,7 @@ export default function DashboardPage() {
               placeholder="Lọc chi phí..." 
               value={expenseSearchQuery}
               onChange={(e) => setExpenseSearchQuery(e.target.value)}
-              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-2 border-surface-variant font-body-sm text-body-sm focus:outline-none focus:border-error transition-all"
+              className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] font-body-sm text-body-sm focus:outline-none focus:border-error transition-all cursor-pointer"
             />
             {expenseSearchQuery && (
               <button 
