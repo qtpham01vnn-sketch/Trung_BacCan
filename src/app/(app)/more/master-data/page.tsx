@@ -76,7 +76,7 @@ export default function MasterDataPage() {
       <header className="mb-stack-lg flex items-center gap-4">
         <button 
           onClick={() => window.history.back()}
-          className="w-12 h-12 bg-surface-container-high border-2 border-on-surface flex items-center justify-center active:bg-surface-container-highest transition-colors"
+          className="w-12 h-12 bg-surface-container-high border-4 border-on-surface flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
@@ -86,28 +86,28 @@ export default function MasterDataPage() {
         </div>
       </header>
 
-      <form onSubmit={handleAdd} className="p-4 bg-surface-container-lowest border-2 border-on-surface space-y-4">
+      <form onSubmit={handleAdd} className="p-4 bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all duration-300 space-y-4">
         <h3 className="font-label-lg uppercase tracking-widest font-bold">THÊM MỚI</h3>
-        <select value={formType} onChange={(e) => setFormType(e.target.value)} className="w-full h-14 px-3 bg-white border-2 border-on-surface font-body-lg">
+        <select value={formType} onChange={(e) => setFormType(e.target.value)} className="w-full h-14 px-3 bg-white border-4 border-on-surface font-body-lg shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all appearance-none rounded-none cursor-pointer">
           <option value="vehicle">Xe Ben / Tải</option>
           <option value="machine">Máy Xúc / Thiết Bị</option>
           <option value="material">Loại Vật Liệu</option>
         </select>
-        <input placeholder="Mã viết tắt (VD: MX-05)" value={formValue} onChange={(e) => setFormValue(e.target.value)} className="w-full h-14 px-3 bg-white border-2 border-on-surface font-body-lg" />
-        <input placeholder="Tên hiển thị (VD: Máy Xúc 05 - CAT)" value={formLabel} onChange={(e) => setFormLabel(e.target.value)} className="w-full h-14 px-3 bg-white border-2 border-on-surface font-body-lg" />
-        <button type="submit" className="w-full h-14 bg-primary text-white font-bold border-2 border-on-surface uppercase shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none">Thêm Danh Mục</button>
+        <input placeholder="Mã viết tắt (VD: MX-05)" value={formValue} onChange={(e) => setFormValue(e.target.value)} className="w-full h-14 px-3 bg-white border-4 border-on-surface font-body-lg shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all" />
+        <input placeholder="Tên hiển thị (VD: Máy Xúc 05 - CAT)" value={formLabel} onChange={(e) => setFormLabel(e.target.value)} className="w-full h-14 px-3 bg-white border-4 border-on-surface font-body-lg shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all" />
+        <button type="submit" className="w-full h-14 bg-primary text-white font-bold border-4 border-on-surface uppercase shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer">Thêm Danh Mục</button>
       </form>
 
       {loading ? <p className="text-center font-bold">Đang tải...</p> : (
         <div className="space-y-3 pb-20">
           {data.map(item => (
-            <div key={item.id} className="flex justify-between items-center p-4 bg-surface-container-high border-2 border-on-surface">
+            <div key={item.id} className="flex justify-between items-center p-4 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200">
               <div>
                 <span className="text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-1 mr-2 inline-block mb-1">{item.type}</span>
                 <span className="font-bold block text-lg">{item.label}</span>
                 <div className="text-sm text-on-surface-variant mt-1">Mã: {item.value}</div>
               </div>
-              <button onClick={() => handleDelete(item.id)} className="w-12 h-12 bg-error text-white flex items-center justify-center border-2 border-on-surface shadow-[2px_2px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none">
+              <button onClick={() => handleDelete(item.id)} className="w-12 h-12 bg-error text-white flex items-center justify-center border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all cursor-pointer">
                 <span className="material-symbols-outlined">delete</span>
               </button>
             </div>
