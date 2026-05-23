@@ -180,10 +180,18 @@ export default function ProjectsPage() {
                         style={{ width: `${project.progress}%` }}
                       ></div>
                     </div>
-                    <div className="flex items-center gap-2 mt-4 text-on-surface-variant">
+                    <div className="flex items-center gap-2 mt-4 text-on-surface-variant mb-4">
                       <span className="material-symbols-outlined text-[18px]">group</span>
                       <span className="font-label-lg">{project.members} Thành viên</span>
                     </div>
+                    
+                    {/* Big Action Button */}
+                    <Link href={`/projects/${project.id}`} className="block w-full">
+                      <button className="w-full h-12 bg-surface-container border-2 border-on-surface flex items-center justify-center gap-2 font-bold font-label-md hover:bg-primary hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(25,28,30,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                        <span className="material-symbols-outlined text-[20px]">manage_search</span>
+                        XEM LỊCH SỬ & CHI TIẾT
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
