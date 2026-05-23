@@ -3,7 +3,10 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/client";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
+import { 
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, 
+  LineChart, Line, CartesianGrid, PieChart, Pie, Cell 
+} from 'recharts';
 import { startOfDay, startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
 
 type FieldForm = {
@@ -18,6 +21,8 @@ type Project = {
   id: string;
   name: string;
 };
+
+const COLORS = ['#00639a', '#006a60', '#ba1a1a', '#6750a4', '#b3261e', '#f9a825'];
 
 export default function AnalyticsPage() {
   const [timeFilter, setTimeFilter] = useState<"today" | "week" | "month">("week");
@@ -48,18 +53,15 @@ export default function AnalyticsPage() {
   const filteredForms = useMemo(() => {
     let result = forms;
 
-    // Filter by project
     if (projectIdFilter !== "all") {
       result = result.filter(f => f.project_id === projectIdFilter);
     }
 
-    // Filter by time
     const now = new Date();
     let startDate: Date;
     if (timeFilter === "today") {
       startDate = startOfDay(now);
     } else if (timeFilter === "week") {
-      // Week starting from Monday
       startDate = startOfWeek(now, { weekStartsOn: 1 });
     } else {
       startDate = startOfMonth(now);
@@ -70,10 +72,17 @@ export default function AnalyticsPage() {
     return result;
   }, [forms, timeFilter, projectIdFilter]);
 
-  const { totalTrips, totalHours, chartData } = useMemo(() => {
+  const { 
+    totalTrips, totalHours, totalWorkers, totalExpense, 
+    chartData, expenseData 
+  } = useMemo(() => {
     let trips = 0;
     let hours = 0;
+    let workers = 0;
+    let expenses = 0;
+    
     const dailyData: Record<string, { date: string; trips: number; hours: number }> = {};
+    const categoryExpenses: Record<string, number> = {};
 
     filteredForms.forEach(form => {
       const dateKey = form.created_at.substring(0, 10);
@@ -85,24 +94,43 @@ export default function AnalyticsPage() {
         const num = Number(form.form_data?.trips) || 0;
         trips += num;
         dailyData[dateKey].trips += num;
-      } else if (form.type === "machine_hours") {
+      } else if (form.type === "hours") {
         const num = Number(form.form_data?.hours) || 0;
         hours += num;
         dailyData[dateKey].hours += num;
+      } else if (form.type === "attendance") {
+        const num = Number(form.form_data?.workerCount) || 0;
+        workers += num;
+      } else if (form.type === "expense") {
+        const amount = Number(form.form_data?.amount) || 0;
+        expenses += amount;
+        
+        const cat = form.form_data?.category || "Khác";
+        if (!categoryExpenses[cat]) categoryExpenses[cat] = 0;
+        categoryExpenses[cat] += amount;
       }
     });
+
+    const expData = Object.entries(categoryExpenses).map(([name, value]) => ({ name, value }));
 
     return {
       totalTrips: trips,
       totalHours: hours,
-      chartData: Object.values(dailyData).sort((a, b) => a.date.localeCompare(b.date))
+      totalWorkers: workers,
+      totalExpense: expenses,
+      chartData: Object.values(dailyData).sort((a, b) => a.date.localeCompare(b.date)),
+      expenseData: expData
     };
   }, [filteredForms]);
+
+  const formatVND = (value: number) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
       <header className="mb-stack-lg">
-        <h2 className="font-headline-lg text-headline-lg text-on-surface mb-1">Báo Cáo Tổng Hợp</h2>
+        <h2 className="font-headline-lg text-headline-lg text-on-surface mb-1 uppercase tracking-tight">Báo Cáo Tổng Hợp</h2>
         <p className="font-body-md text-on-surface-variant">Phân tích số liệu hiện trường</p>
       </header>
 
@@ -113,7 +141,7 @@ export default function AnalyticsPage() {
           <select 
             value={timeFilter} 
             onChange={e => setTimeFilter(e.target.value as any)}
-            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none"
+            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none font-bold"
           >
             <option value="today">Hôm nay</option>
             <option value="week">Tuần này</option>
@@ -125,10 +153,10 @@ export default function AnalyticsPage() {
           <select 
             value={projectIdFilter} 
             onChange={e => setProjectIdFilter(e.target.value)}
-            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none"
+            className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none font-bold"
           >
             <option value="all">Tất cả dự án</option>
-            <option value="default-project">Dự án mặc định (Chưa gán)</option>
+            <option value="default-project">Dự án mặc định</option>
             {projects.map(p => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
@@ -137,78 +165,168 @@ export default function AnalyticsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-center py-10 font-bold animate-pulse">Đang tải dữ liệu...</p>
+        <div className="flex flex-col items-center justify-center py-20 opacity-50">
+          <span className="material-symbols-outlined text-4xl animate-spin mb-4">sync</span>
+          <p className="font-bold uppercase tracking-widest">Đang phân tích dữ liệu...</p>
+        </div>
       ) : (
         <>
           {/* Overview Cards */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="group bg-primary text-on-primary p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-300 flex flex-col items-center justify-center text-center">
-              <span className="material-symbols-outlined text-3xl mb-1 opacity-80 group-hover:scale-110 transition-transform">local_shipping</span>
-              <span className="font-headline-lg text-5xl font-black drop-shadow-md">{totalTrips}</span>
-              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90 font-bold">Chuyến Xe</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="col-span-2 md:col-span-4 bg-tertiary text-on-tertiary p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all flex flex-col justify-center">
+              <span className="font-label-md uppercase tracking-widest opacity-90 font-bold mb-1">TỔNG CHI PHÍ</span>
+              <span className="font-headline-lg text-4xl md:text-5xl font-black drop-shadow-md">{formatVND(totalExpense)}</span>
             </div>
-            <div className="group bg-[#006a60] text-white p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-300 flex flex-col items-center justify-center text-center">
-              <span className="material-symbols-outlined text-3xl mb-1 opacity-80 group-hover:scale-110 transition-transform">precision_manufacturing</span>
-              <span className="font-headline-lg text-5xl font-black drop-shadow-md">{totalHours}</span>
-              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90 font-bold">Giờ Máy</span>
+
+            <div className="bg-primary text-on-primary p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all flex flex-col items-center text-center">
+              <span className="material-symbols-outlined text-3xl mb-1 opacity-80">local_shipping</span>
+              <span className="font-headline-lg text-4xl font-black drop-shadow-md">{totalTrips}</span>
+              <span className="font-label-sm uppercase tracking-widest mt-1 opacity-90 font-bold">Chuyến Xe</span>
+            </div>
+
+            <div className="bg-[#006a60] text-white p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all flex flex-col items-center text-center">
+              <span className="material-symbols-outlined text-3xl mb-1 opacity-80">precision_manufacturing</span>
+              <span className="font-headline-lg text-4xl font-black drop-shadow-md">{totalHours}</span>
+              <span className="font-label-sm uppercase tracking-widest mt-1 opacity-90 font-bold">Giờ Máy</span>
+            </div>
+
+            <div className="col-span-2 bg-secondary text-on-secondary p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all flex items-center justify-between">
+              <div>
+                <span className="font-label-md uppercase tracking-widest opacity-90 font-bold block mb-1">NHÂN CÔNG ĐIỂM DANH</span>
+                <span className="font-headline-lg text-4xl font-black drop-shadow-md">{totalWorkers}</span>
+              </div>
+              <span className="material-symbols-outlined text-5xl opacity-50">groups</span>
             </div>
           </div>
 
           {/* Charts */}
-          <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 mt-8 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all duration-300">
-            <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-primary">Biểu đồ Chuyến Xe (Cột)</h3>
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="date" tick={{fontSize: 12}} />
-                  <YAxis tick={{fontSize: 12}} />
-                  <Tooltip cursor={{fill: 'rgba(0,0,0,0.1)'}} contentStyle={{fontWeight: 'bold', border: '2px solid black'}} />
-                  <Bar dataKey="trips" fill="#00639a" name="Số chuyến" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <div className="space-y-6 mt-8">
+            {expenseData.length > 0 && (
+              <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all">
+                <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-tertiary">Chi Phí Theo Hạng Mục</h3>
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={expenseData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={80}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {expenseData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value: number) => formatVND(value)} contentStyle={{fontWeight: 'bold', border: '4px solid black', borderRadius: 0}} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center mt-2">
+                  {expenseData.map((entry, index) => (
+                    <div key={entry.name} className="flex items-center gap-1 text-sm font-bold">
+                      <div className="w-3 h-3" style={{backgroundColor: COLORS[index % COLORS.length]}}></div>
+                      {entry.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 mt-4 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all duration-300">
-            <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-[#006a60]">Biểu đồ Giờ Máy (Đường)</h3>
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="date" tick={{fontSize: 12}} />
-                  <YAxis tick={{fontSize: 12}} />
-                  <Tooltip contentStyle={{fontWeight: 'bold', border: '2px solid black'}} />
-                  <Line type="monotone" dataKey="hours" stroke="#006a60" strokeWidth={4} name="Số giờ" dot={{r: 6}} />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="bg-surface-container-lowest border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] p-4 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(25,28,30,1)] transition-all">
+              <h3 className="font-headline-sm mb-4 uppercase tracking-tight text-primary">Biểu đồ Chuyến Xe & Giờ Máy</h3>
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="date" tick={{fontSize: 12, fontWeight: 'bold'}} />
+                    <YAxis yAxisId="left" tick={{fontSize: 12, fontWeight: 'bold'}} />
+                    <YAxis yAxisId="right" orientation="right" tick={{fontSize: 12, fontWeight: 'bold'}} />
+                    <Tooltip cursor={{fill: 'rgba(0,0,0,0.1)'}} contentStyle={{fontWeight: 'bold', border: '4px solid black', borderRadius: 0}} />
+                    <Bar yAxisId="left" dataKey="trips" fill="#00639a" name="Số chuyến" />
+                    <Line yAxisId="right" type="monotone" dataKey="hours" stroke="#006a60" strokeWidth={4} name="Số giờ" dot={{r: 4}} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
           
           {/* Recent Logs List */}
           <div className="mt-8 mb-20">
             <h3 className="font-headline-sm mb-4 uppercase tracking-tight">Khai báo gần nhất</h3>
-            <div className="space-y-3">
-              {filteredForms.slice(-10).reverse().map(form => (
-                <div key={form.id} className="p-3 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 cursor-pointer">
-                  <div className="flex justify-between mb-1">
-                    <span className="font-bold uppercase text-sm">
-                      {form.type === 'transport' ? '🚛 Chuyến Xe' : form.type === 'machine_hours' ? '🚜 Giờ Máy' : '📸 Hình Ảnh'}
+            <div className="space-y-4">
+              {filteredForms.slice(-15).reverse().map(form => (
+                <div key={form.id} className="p-4 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200">
+                  <div className="flex justify-between mb-2">
+                    <span className="font-black uppercase text-sm tracking-widest flex items-center gap-2">
+                      {form.type === 'transport' && <><span className="material-symbols-outlined text-primary">local_shipping</span>Chuyến Xe</>}
+                      {form.type === 'hours' && <><span className="material-symbols-outlined text-[#006a60]">precision_manufacturing</span>Giờ Máy</>}
+                      {form.type === 'attendance' && <><span className="material-symbols-outlined text-secondary">groups</span>Điểm Danh</>}
+                      {form.type === 'expense' && <><span className="material-symbols-outlined text-error">payments</span>Chi Phí</>}
+                      {form.type === 'volume' && <><span className="material-symbols-outlined text-tertiary">architecture</span>Sản Lượng</>}
+                      {form.type === 'photo' && <><span className="material-symbols-outlined text-on-surface-variant">photo_camera</span>Hình Ảnh</>}
                     </span>
-                    <span className="text-xs text-on-surface-variant">{new Date(form.created_at).toLocaleString('vi-VN')}</span>
+                    <span className="text-xs font-bold text-on-surface-variant">{new Date(form.created_at).toLocaleString('vi-VN')}</span>
                   </div>
-                  <div className="text-sm">
-                    {form.type === 'transport' && <span className="text-primary font-bold">{form.form_data.trips} chuyến</span>}
-                    {form.type === 'transport' && ` - Xe: ${form.form_data.vehicleId} (VL: ${form.form_data.material})`}
+                  
+                  <div className="text-body-md font-medium">
+                    {form.type === 'transport' && (
+                      <div className="flex justify-between items-end">
+                        <span>Xe: <strong>{form.form_data.vehicleId}</strong> (VL: {form.form_data.material})</span>
+                        <span className="text-xl font-black text-primary">{form.form_data.trips} chuyến</span>
+                      </div>
+                    )}
                     
-                    {form.type === 'machine_hours' && <span className="text-[#006a60] font-bold">{form.form_data.hours} giờ</span>}
-                    {form.type === 'machine_hours' && ` - Máy: ${form.form_data.machineId}`}
+                    {form.type === 'hours' && (
+                      <div className="flex justify-between items-end">
+                        <span>Máy: <strong>{form.form_data.machineId}</strong></span>
+                        <span className="text-xl font-black text-[#006a60]">{form.form_data.hours} giờ</span>
+                      </div>
+                    )}
+
+                    {form.type === 'attendance' && (
+                      <div className="flex justify-between items-end">
+                        <span>Ghi chú: {form.form_data.notes || 'Không có'}</span>
+                        <span className="text-xl font-black text-secondary">{form.form_data.workerCount} người</span>
+                      </div>
+                    )}
+
+                    {form.type === 'volume' && (
+                      <div className="flex justify-between items-end">
+                        <span>Vị trí: <strong>{form.form_data.location}</strong></span>
+                        <span className="text-xl font-black text-tertiary">{form.form_data.quantity} {form.form_data.unit}</span>
+                      </div>
+                    )}
+
+                    {form.type === 'expense' && (
+                      <div className="flex flex-col">
+                        <span>Hạng mục: <strong>{form.form_data.category}</strong></span>
+                        <span className="text-sm opacity-80 mt-1">{form.form_data.description}</span>
+                        <span className="text-2xl font-black text-error mt-2">{formatVND(Number(form.form_data.amount))}</span>
+                      </div>
+                    )}
                     
-                    {form.type === 'photo' && `Ảnh báo cáo: ${form.form_data.description || 'Không có ghi chú'}`}
+                    {form.type === 'photo' && (
+                      <div className="flex gap-4 items-start">
+                        {form.form_data.photoUrl && (
+                          <div className="w-24 h-24 border-2 border-on-surface relative overflow-hidden bg-black flex-shrink-0">
+                            <img src={form.form_data.photoUrl} alt="Field Photo" className="object-cover w-full h-full" />
+                          </div>
+                        )}
+                        <span className="italic mt-1">"{form.form_data.notes || 'Không có ghi chú'}"</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
-              {filteredForms.length === 0 && <p className="text-on-surface-variant italic p-4 text-center border-2 border-dashed border-on-surface">Chưa có dữ liệu nào khớp với bộ lọc</p>}
+              {filteredForms.length === 0 && (
+                <div className="p-8 border-4 border-dashed border-on-surface-variant flex flex-col items-center justify-center opacity-60">
+                  <span className="material-symbols-outlined text-5xl mb-2">inbox</span>
+                  <p className="font-bold uppercase tracking-widest">Chưa có dữ liệu nào</p>
+                </div>
+              )}
             </div>
           </div>
         </>
