@@ -8,6 +8,8 @@ import { db, FieldForm } from "@/lib/db";
 import { useAuthStore } from "@/stores/authStore";
 
 import { useLiveQuery } from "dexie-react-hooks";
+import { useQuery } from "@tanstack/react-query";
+import { createClient } from "@/utils/supabase/client";
 
 type FormType = "attendance" | "hours" | "transport" | "volume" | "expense" | null;
 
@@ -16,6 +18,15 @@ export default function InputHubPage() {
   const [photos, setPhotos] = useState<{ id: string; preview: string; note: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const role = useAuthStore((state) => state.role);
+
+  const supabase = createClient();
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects_list_input'],
+    queryFn: async () => {
+      const { data } = await supabase.from('projects').select('id, name');
+      return (data || []) as { id: string; name: string }[];
+    }
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -42,6 +53,12 @@ export default function InputHubPage() {
     [],
     0 // default value
   );
+
+  // Load Master Data offline
+  const masterDataList = useLiveQuery(() => db.masterData.toArray(), []) || [];
+  const machines = masterDataList.filter((m) => m.type === "machine");
+  const vehicles = masterDataList.filter((m) => m.type === "vehicle");
+  const materials = masterDataList.filter((m) => m.type === "material");
 
   const triggerVibration = () => {
     if (typeof window !== "undefined" && window.navigator.vibrate) {
@@ -200,17 +217,37 @@ export default function InputHubPage() {
         </header>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Default Project ID field (Temporary until full offline project sync) */}
+          <div className="space-y-2">
+            <label className="font-label-lg text-label-lg text-on-surface-variant block uppercase tracking-widest">
+              THUỘC DỰ ÁN / TRẠM
+            </label>
+            <select
+              {...register("project_id", { required: true })}
+              defaultValue="default-project"
+              className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+            >
+              <option value="default-project">Dự án mặc định (Tạm thời)</option>
+              {projects.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
           {activeForm === "hours" && (
             <>
               <div className="space-y-2">
                 <label className="font-label-lg text-label-lg text-on-surface-variant block uppercase tracking-widest">
                   MÃ MÁY XÚC / THIẾT BỊ
                 </label>
-                <input
+                <select
                   {...register("machineId", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
-                  placeholder="Ví dụ: MX-04"
-                />
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                >
+                  <option value="">-- Chọn Máy Xúc / Thiết Bị --</option>
+                  {machines.map(m => (
+                    <option key={m.id} value={m.value}>{m.label}</option>
+                  ))}
+                </select>
                 {errors.machineId && <span className="text-error text-sm">Bắt buộc nhập mã máy</span>}
               </div>
 
@@ -263,11 +300,15 @@ export default function InputHubPage() {
                 <label className="font-label-lg text-label-lg text-on-surface-variant block uppercase tracking-widest">
                   MÃ XE (XE BEN / TẢI)
                 </label>
-                <input
+                <select
                   {...register("vehicleId", { required: true })}
-                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)]"
-                  placeholder="Ví dụ: 97C-123.45"
-                />
+                  className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+                >
+                  <option value="">-- Chọn Mã Xe --</option>
+                  {vehicles.map(v => (
+                    <option key={v.id} value={v.value}>{v.label}</option>
+                  ))}
+                </select>
                 {errors.vehicleId && <span className="text-error text-sm">Bắt buộc nhập mã xe</span>}
               </div>
 
@@ -292,9 +333,9 @@ export default function InputHubPage() {
                   className="w-full h-14 px-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn vật liệu --</option>
-                  <option value="Đất san lấp">Đất san lấp</option>
-                  <option value="Đá dăm">Đá dăm</option>
-                  <option value="Cát">Cát</option>
+                  {materials.map(m => (
+                    <option key={m.id} value={m.value}>{m.label}</option>
+                  ))}
                   <option value="Khác">Khác</option>
                 </select>
               </div>

@@ -31,9 +31,8 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      // Giả lập lấy role từ user metadata hoặc table (ở đây hardcode tạm để test)
-      // Khi đã có bảng profiles thực tế, chúng ta sẽ fetch role từ đó
-      const userRole = tab === "office" ? "office" : "field_worker";
+      // Phân quyền theo Email: Chứa 'admin' thì là Sếp (admin), còn lại là Công nhân (field_worker)
+      const userRole = email.toLowerCase().includes("admin") ? "admin" : "field_worker";
       setAuth(data.session, userRole);
 
       router.push("/");

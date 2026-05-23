@@ -51,7 +51,46 @@ export function SyncManager() {
         const { data: { user } } = await supabase.auth.getUser();
 
         for (const form of pendingForms) {
-          // Push to Supabase
+          let finalFormData = { ...form.form_data };
+          
+          // BƯỚC XỬ LÝ ẢNH BASE64
+          if (form.type === "photo" && finalFormData.photoUrl && finalFormData.photoUrl.startsWith("data:image")) {
+            try {
+              // 1. Chuyển đổi Base64 thành Blob
+              const res = await fetch(finalFormData.photoUrl);
+              const blob = await res.blob();
+              const ext = blob.type.split('/')[1] || 'jpg';
+              
+              // 2. Upload lên Storage Bucket
+              const fileName = `${user?.id || 'guest'}/${Date.now()}-${form.id}.${ext}`;
+              const { data: uploadData, error: uploadError } = await supabase
+                .storage
+                .from('field-photos')
+                .upload(fileName, blob, {
+                  cacheControl: '3600',
+                  upsert: false
+                });
+
+              if (uploadError) {
+                console.error(`Lỗi upload ảnh lên Storage (${form.id}):`, uploadError);
+                continue; // Lỗi upload ảnh thì bỏ qua form này để lần sau sync lại
+              }
+              
+              // 3. Lấy Public URL
+              const { data: publicUrlData } = supabase
+                .storage
+                .from('field-photos')
+                .getPublicUrl(fileName);
+                
+              // 4. Ghi đè Base64 khổng lồ bằng đường dẫn URL ngắn
+              finalFormData.photoUrl = publicUrlData.publicUrl;
+            } catch (err) {
+              console.error(`Lỗi biến đổi dữ liệu ảnh (${form.id}):`, err);
+              continue; // Lỗi thì bỏ qua
+            }
+          }
+
+          // Push to Supabase Database
           const { data, error } = await supabase
             .from("field_forms")
             .insert({
@@ -60,7 +99,7 @@ export function SyncManager() {
               project_id: form.project_id,
               type: form.type,
               title: form.title,
-              form_data: form.form_data,
+              form_data: finalFormData, // Sử dụng finalFormData đã tối ưu
               status: "synced", // Update status on server
               created_by: user?.id || null,
               created_at: form.created_at,
@@ -76,6 +115,7 @@ export function SyncManager() {
             await db.fieldForms.update(form.id, {
               status: "synced",
               server_id: data.id,
+              form_data: finalFormData, // Lưu đè lại data local bằng URL ngắn gọn để giải phóng bộ nhớ
               updated_at: new Date().toISOString()
             });
             console.log(`Đã đồng bộ xong form ${form.id}`);
