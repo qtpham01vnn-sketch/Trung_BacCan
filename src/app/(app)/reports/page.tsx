@@ -142,15 +142,15 @@ export default function AnalyticsPage() {
         <>
           {/* Overview Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-primary text-on-primary p-4 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] flex flex-col items-center justify-center text-center">
-              <span className="material-symbols-outlined text-3xl mb-1 opacity-80">local_shipping</span>
-              <span className="font-headline-lg text-4xl font-black">{totalTrips}</span>
-              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90">Chuyến Xe</span>
+            <div className="group bg-primary text-on-primary p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-300 flex flex-col items-center justify-center text-center">
+              <span className="material-symbols-outlined text-3xl mb-1 opacity-80 group-hover:scale-110 transition-transform">local_shipping</span>
+              <span className="font-headline-lg text-5xl font-black drop-shadow-md">{totalTrips}</span>
+              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90 font-bold">Chuyến Xe</span>
             </div>
-            <div className="bg-[#006a60] text-white p-4 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] flex flex-col items-center justify-center text-center">
-              <span className="material-symbols-outlined text-3xl mb-1 opacity-80">precision_manufacturing</span>
-              <span className="font-headline-lg text-4xl font-black">{totalHours}</span>
-              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90">Giờ Máy</span>
+            <div className="group bg-[#006a60] text-white p-4 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-300 flex flex-col items-center justify-center text-center">
+              <span className="material-symbols-outlined text-3xl mb-1 opacity-80 group-hover:scale-110 transition-transform">precision_manufacturing</span>
+              <span className="font-headline-lg text-5xl font-black drop-shadow-md">{totalHours}</span>
+              <span className="font-label-md uppercase tracking-widest mt-1 opacity-90 font-bold">Giờ Máy</span>
             </div>
           </div>
 

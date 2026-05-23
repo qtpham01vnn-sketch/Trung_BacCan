@@ -474,7 +474,7 @@ export default function InputHubPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {/* Attendance */}
         <button 
-          className="rugged-card flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-primary-fixed hover:bg-primary-container transition-colors"
+          className="flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-primary-fixed border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200"
           onClick={(e) => handleOpenForm(e, "attendance")}
         >
           <span className="material-symbols-outlined text-primary text-2xl mb-1 filled-icon">groups</span>
@@ -483,7 +483,7 @@ export default function InputHubPage() {
 
         {/* Machine Hours */}
         <button 
-          className="rugged-card flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-secondary-container hover:bg-tertiary-container transition-colors"
+          className="flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-secondary-container border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200"
           onClick={(e) => handleOpenForm(e, "hours")}
         >
           <span className="material-symbols-outlined text-secondary text-2xl mb-1 filled-icon">settings_slow_motion</span>
@@ -492,7 +492,7 @@ export default function InputHubPage() {
 
         {/* Vehicle Trips */}
         <button 
-          className="rugged-card flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-high hover:bg-secondary-fixed transition-colors"
+          className="flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-highest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200"
           onClick={(e) => handleOpenForm(e, "transport")}
         >
           <span className="material-symbols-outlined text-on-surface-variant text-2xl mb-1 group-hover:text-on-secondary-fixed">local_shipping</span>
@@ -501,7 +501,7 @@ export default function InputHubPage() {
 
         {/* Work Volume */}
         <button 
-          className="rugged-card flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-high hover:bg-secondary-fixed transition-colors"
+          className="flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-highest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200"
           onClick={(e) => handleOpenForm(e, "volume")}
         >
           <span className="material-symbols-outlined text-on-surface-variant text-2xl mb-1 group-hover:text-on-secondary-fixed">architecture</span>
@@ -510,7 +510,7 @@ export default function InputHubPage() {
 
         {/* Expense Entry */}
         <button 
-          className="rugged-card flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-high hover:bg-secondary-fixed transition-colors"
+          className="flex flex-col items-center justify-center p-4 text-center group relative overflow-hidden focus:outline-none bg-surface-container-highest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200"
           onClick={(e) => handleOpenForm(e, "expense")}
         >
           <span className="material-symbols-outlined text-on-surface-variant text-2xl mb-1 group-hover:text-on-secondary-fixed">payments</span>
