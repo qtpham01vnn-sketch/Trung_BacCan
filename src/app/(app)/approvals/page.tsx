@@ -163,7 +163,7 @@ export default function ApprovalsPage() {
         return (
           <div className="mt-2 text-sm space-y-1">
             <p><span className="text-on-surface-variant">Hạng mục:</span> {data.category}</p>
-            <p><span className="text-on-surface-variant">Số tiền chi:</span> <span className="font-bold text-error text-xl">{Number(data.amount).toLocaleString('vi-VN')} VNĐ</span></p>
+            <p><span className="text-on-surface-variant">Số tiền chi:</span> <span className="font-bold text-error text-xl">{Number(String(data.amount || "0").replace(/[^0-9]/g, "")).toLocaleString('vi-VN')} VNĐ</span></p>
             <p><span className="text-on-surface-variant block">Mô tả:</span> {data.description}</p>
           </div>
         );
