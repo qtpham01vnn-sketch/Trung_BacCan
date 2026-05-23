@@ -59,6 +59,26 @@ export default function ApprovalsPage() {
     }
   });
 
+  // Lấy số lượng cho từng tab (dựa theo filter)
+  const { data: counts = { synced: 0, approved: 0, rejected: 0 } } = useQuery({
+    queryKey: ['approvals_counts', filterProject, filterType],
+    queryFn: async () => {
+      let query = supabase.from('field_forms').select('id, status');
+      
+      if (filterProject !== 'all') query = query.eq('project_id', filterProject);
+      if (filterType !== 'all') query = query.eq('type', filterType);
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      
+      return {
+        synced: data.filter(d => d.status === 'synced').length,
+        approved: data.filter(d => d.status === 'approved').length,
+        rejected: data.filter(d => d.status === 'rejected').length,
+      };
+    }
+  });
+
   // Mutation cập nhật trạng thái
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string, status: 'approved' | 'rejected' }) => {
@@ -70,6 +90,7 @@ export default function ApprovalsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending_approvals'] });
+      queryClient.invalidateQueries({ queryKey: ['approvals_counts'] });
     },
     onSettled: () => {
       setProcessingId(null);
@@ -88,6 +109,7 @@ export default function ApprovalsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending_approvals'] });
+      queryClient.invalidateQueries({ queryKey: ['approvals_counts'] });
     }
   });
 
@@ -199,19 +221,19 @@ export default function ApprovalsPage() {
           onClick={() => setFilterStatus('synced')}
           className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'synced' ? 'bg-[#f59e0b] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
         >
-          CHỜ DUYỆT
+          CHỜ DUYỆT {counts.synced > 0 ? `(${counts.synced})` : ''}
         </button>
         <button 
           onClick={() => setFilterStatus('approved')}
           className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'approved' ? 'bg-[#10b981] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
         >
-          ĐÃ DUYỆT
+          ĐÃ DUYỆT {counts.approved > 0 ? `(${counts.approved})` : ''}
         </button>
         <button 
           onClick={() => setFilterStatus('rejected')}
           className={`flex-1 py-3 font-bold font-label-md transition-colors ${filterStatus === 'rejected' ? 'bg-[#ef4444] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
         >
-          TỪ CHỐI
+          TỪ CHỐI {counts.rejected > 0 ? `(${counts.rejected})` : ''}
         </button>
       </div>
 
