@@ -23,6 +23,7 @@ export default function ApprovalsPage() {
   // Filter states
   const [filterProject, setFilterProject] = useState<string>('all');
   const [filterType, setFilterType] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<'synced' | 'approved' | 'rejected'>('synced');
 
   // Lấy danh sách dự án cho bộ lọc
   const { data: projects = [] } = useQuery({
@@ -33,16 +34,16 @@ export default function ApprovalsPage() {
     }
   });
 
-  // Lấy dữ liệu chờ duyệt (status = 'synced')
+  // Lấy dữ liệu theo trạng thái
   const { data: pendingForms = [], isLoading, error } = useQuery({
-    queryKey: ['pending_approvals', filterProject, filterType],
+    queryKey: ['pending_approvals', filterProject, filterType, filterStatus],
     queryFn: async () => {
       let query = supabase
         .from('field_forms')
         .select(`
           id, type, title, form_data, created_at, project_id
         `)
-        .eq('status', 'synced')
+        .eq('status', filterStatus)
         .order('created_at', { ascending: false });
         
       if (filterProject !== 'all') {
@@ -180,15 +181,39 @@ export default function ApprovalsPage() {
           </p>
         </div>
         
-        <button 
-          onClick={handleApproveAll}
-          disabled={pendingForms.length === 0 || approveAllMutation.isPending}
-          className="bg-primary text-white px-4 py-2 font-bold font-label-md flex items-center gap-2 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span className="material-symbols-outlined">done_all</span>
-          DUYỆT TẤT CẢ ({pendingForms.length})
-        </button>
+        {filterStatus === 'synced' && (
+          <button 
+            onClick={handleApproveAll}
+            disabled={pendingForms.length === 0 || approveAllMutation.isPending}
+            className="bg-primary text-white px-4 py-2 font-bold font-label-md flex items-center gap-2 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="material-symbols-outlined">done_all</span>
+            DUYỆT TẤT CẢ ({pendingForms.length})
+          </button>
+        )}
       </header>
+
+      {/* Tabs Trạng thái */}
+      <div className="flex border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] mb-6">
+        <button 
+          onClick={() => setFilterStatus('synced')}
+          className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'synced' ? 'bg-[#f59e0b] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+        >
+          CHỜ DUYỆT
+        </button>
+        <button 
+          onClick={() => setFilterStatus('approved')}
+          className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'approved' ? 'bg-[#10b981] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+        >
+          ĐÃ DUYỆT
+        </button>
+        <button 
+          onClick={() => setFilterStatus('rejected')}
+          className={`flex-1 py-3 font-bold font-label-md transition-colors ${filterStatus === 'rejected' ? 'bg-[#ef4444] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+        >
+          TỪ CHỐI
+        </button>
+      </div>
 
       {/* Bộ Lọc */}
       <div className="flex gap-3 mb-6">
@@ -273,35 +298,37 @@ export default function ApprovalsPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-0 border-t-2 border-on-surface">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); handleUpdate(form.id, 'approved'); }}
-                  disabled={processingId === form.id}
-                  className="flex-1 h-14 bg-emerald-600 text-white font-bold font-label-lg flex items-center justify-center gap-2 hover:bg-emerald-500 transition-all disabled:opacity-50"
-                >
-                  {processingId === form.id ? (
-                    <span className="material-symbols-outlined animate-spin">sync</span>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined">check_circle</span>
-                      PHÊ DUYỆT
-                    </>
-                  )}
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (window.confirm("Từ chối báo cáo này?")) {
-                      handleUpdate(form.id, 'rejected');
-                    }
-                  }}
-                  disabled={processingId === form.id}
-                  className="w-16 h-14 bg-error text-white font-bold flex items-center justify-center border-l-2 border-on-surface hover:bg-red-700 transition-all disabled:opacity-50"
-                  title="Từ chối"
-                >
-                  <span className="material-symbols-outlined">cancel</span>
-                </button>
-              </div>
+              {filterStatus === 'synced' && (
+                <div className="flex gap-0 border-t-2 border-on-surface">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleUpdate(form.id, 'approved'); }}
+                    disabled={processingId === form.id}
+                    className="flex-1 h-14 bg-emerald-600 text-white font-bold font-label-lg flex items-center justify-center gap-2 hover:bg-emerald-500 transition-all disabled:opacity-50"
+                  >
+                    {processingId === form.id ? (
+                      <span className="material-symbols-outlined animate-spin">sync</span>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined">check_circle</span>
+                        PHÊ DUYỆT
+                      </>
+                    )}
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm("Từ chối báo cáo này?")) {
+                        handleUpdate(form.id, 'rejected');
+                      }
+                    }}
+                    disabled={processingId === form.id}
+                    className="w-16 h-14 bg-error text-white font-bold flex items-center justify-center border-l-2 border-on-surface hover:bg-red-700 transition-all disabled:opacity-50"
+                    title="Từ chối"
+                  >
+                    <span className="material-symbols-outlined">cancel</span>
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -342,34 +369,36 @@ export default function ApprovalsPage() {
               {renderDetails(selectedForm.type, selectedForm.form_data, true)}
             </div>
 
-            <footer className="p-4 border-t-2 border-on-surface bg-surface-container flex gap-3">
-              <button 
-                onClick={() => handleUpdate(selectedForm.id, 'approved')}
-                disabled={processingId === selectedForm.id}
-                className="flex-1 h-14 bg-emerald-600 text-white font-bold font-label-lg flex items-center justify-center gap-2 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:bg-emerald-500 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50"
-              >
-                {processingId === selectedForm.id ? (
-                  <span className="material-symbols-outlined animate-spin">sync</span>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined">check_circle</span>
-                    PHÊ DUYỆT BÁO CÁO NÀY
-                  </>
-                )}
-              </button>
-              <button 
-                onClick={() => {
-                  if (window.confirm("Từ chối báo cáo này?")) {
-                    handleUpdate(selectedForm.id, 'rejected');
-                  }
-                }}
-                disabled={processingId === selectedForm.id}
-                className="w-16 h-14 bg-error text-white font-bold flex items-center justify-center border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:bg-red-700 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50"
-                title="Từ chối"
-              >
-                <span className="material-symbols-outlined">cancel</span>
-              </button>
-            </footer>
+            {filterStatus === 'synced' && (
+              <footer className="p-4 border-t-2 border-on-surface bg-surface-container flex gap-3">
+                <button 
+                  onClick={() => handleUpdate(selectedForm.id, 'approved')}
+                  disabled={processingId === selectedForm.id}
+                  className="flex-1 h-14 bg-emerald-600 text-white font-bold font-label-lg flex items-center justify-center gap-2 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:bg-emerald-500 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50"
+                >
+                  {processingId === selectedForm.id ? (
+                    <span className="material-symbols-outlined animate-spin">sync</span>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined">check_circle</span>
+                      PHÊ DUYỆT BÁO CÁO NÀY
+                    </>
+                  )}
+                </button>
+                <button 
+                  onClick={() => {
+                    if (window.confirm("Từ chối báo cáo này?")) {
+                      handleUpdate(selectedForm.id, 'rejected');
+                    }
+                  }}
+                  disabled={processingId === selectedForm.id}
+                  className="w-16 h-14 bg-error text-white font-bold flex items-center justify-center border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:bg-red-700 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50"
+                  title="Từ chối"
+                >
+                  <span className="material-symbols-outlined">cancel</span>
+                </button>
+              </footer>
+            )}
           </div>
         </div>
       )}
