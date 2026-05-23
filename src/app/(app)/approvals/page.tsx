@@ -207,7 +207,7 @@ export default function ApprovalsPage() {
           <button 
             onClick={handleApproveAll}
             disabled={pendingForms.length === 0 || approveAllMutation.isPending}
-            className="bg-primary text-white px-4 py-2 font-bold font-label-md flex items-center gap-2 border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary text-white px-4 py-2 font-bold font-label-md flex items-center gap-2 border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined">done_all</span>
             DUYỆT TẤT CẢ ({pendingForms.length})
@@ -216,22 +216,22 @@ export default function ApprovalsPage() {
       </header>
 
       {/* Tabs Trạng thái */}
-      <div className="flex border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] mb-6">
+      <div className="flex gap-2 mb-6">
         <button 
           onClick={() => setFilterStatus('synced')}
-          className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'synced' ? 'bg-[#f59e0b] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+          className={`flex-1 py-3 font-bold font-label-md border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200 ${filterStatus === 'synced' ? 'bg-[#f59e0b] text-white' : 'bg-surface text-on-surface-variant hover:bg-surface-container-low'}`}
         >
           CHỜ DUYỆT {counts.synced > 0 ? `(${counts.synced})` : ''}
         </button>
         <button 
           onClick={() => setFilterStatus('approved')}
-          className={`flex-1 py-3 font-bold font-label-md border-r-2 border-on-surface transition-colors ${filterStatus === 'approved' ? 'bg-[#10b981] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+          className={`flex-1 py-3 font-bold font-label-md border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200 ${filterStatus === 'approved' ? 'bg-[#10b981] text-white' : 'bg-surface text-on-surface-variant hover:bg-surface-container-low'}`}
         >
           ĐÃ DUYỆT {counts.approved > 0 ? `(${counts.approved})` : ''}
         </button>
         <button 
           onClick={() => setFilterStatus('rejected')}
-          className={`flex-1 py-3 font-bold font-label-md transition-colors ${filterStatus === 'rejected' ? 'bg-[#ef4444] text-white' : 'bg-surface hover:bg-surface-container-low text-on-surface-variant'}`}
+          className={`flex-1 py-3 font-bold font-label-md border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all duration-200 ${filterStatus === 'rejected' ? 'bg-[#ef4444] text-white' : 'bg-surface text-on-surface-variant hover:bg-surface-container-low'}`}
         >
           TỪ CHỐI {counts.rejected > 0 ? `(${counts.rejected})` : ''}
         </button>
@@ -242,7 +242,7 @@ export default function ApprovalsPage() {
         <select
           value={filterProject}
           onChange={(e) => setFilterProject(e.target.value)}
-          className="flex-1 h-12 px-3 bg-surface-container-lowest border-2 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+          className="flex-1 h-12 px-3 bg-surface-container-lowest border-4 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 appearance-none rounded-none cursor-pointer"
         >
           <option value="all">-- Tất cả Dự án --</option>
           <option value="default-project">Dự án mặc định</option>
@@ -254,7 +254,7 @@ export default function ApprovalsPage() {
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="flex-1 h-12 px-3 bg-surface-container-lowest border-2 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
+          className="flex-1 h-12 px-3 bg-surface-container-lowest border-4 border-on-surface font-body-md text-body-md focus:outline-none focus:border-primary shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 appearance-none rounded-none cursor-pointer"
         >
           <option value="all">-- Tất cả Loại báo cáo --</option>
           <option value="hours">Giờ máy</option>
@@ -284,7 +284,7 @@ export default function ApprovalsPage() {
       ) : (
         <div className="space-y-4 pb-20">
           {pendingForms.map((form: any) => (
-            <div key={form.id} className="bg-surface-container-lowest border-2 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] p-0 relative overflow-hidden group">
+            <div key={form.id} className="bg-surface-container-lowest border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 p-0 relative overflow-hidden group">
               {/* Type Badge */}
               <div className="absolute top-0 right-0 bg-surface-container-high px-3 py-1 border-b-2 border-l-2 border-on-surface flex items-center gap-1 z-10">
                 <span className="material-symbols-outlined text-sm">{getIconForType(form.type)}</span>

@@ -310,7 +310,7 @@ export default function DashboardPage() {
                   const data = form.form_data || {};
                   
                   return (
-                    <div key={form.id} className="flex flex-col p-3 bg-surface-container-lowest border-2 border-surface-variant hover:bg-surface-container-low transition-colors shadow-sm gap-2">
+                    <div key={form.id} className="group flex flex-col p-3 bg-surface-container-lowest border-2 border-surface-variant hover:border-on-surface hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 gap-2">
                       <div className="flex items-center gap-3 border-b border-surface-variant/50 pb-2">
                         <div className="h-8 w-8 bg-secondary-container flex items-center justify-center border border-on-surface flex-shrink-0">
                           <span className="material-symbols-outlined text-on-secondary-container text-sm">
@@ -438,7 +438,7 @@ export default function DashboardPage() {
               return filteredExpenses.map((expense: any) => {
                 const data = expense.form_data || {};
                 return (
-                  <div key={expense.id} className="flex flex-col py-3 px-3 bg-surface-container-lowest border-2 border-surface-variant hover:border-error transition-colors">
+                  <div key={expense.id} className="group flex flex-col py-3 px-3 bg-surface-container-lowest border-2 border-surface-variant hover:border-error hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-all duration-200">
                     <div className="flex justify-between items-start mb-1">
                       <span className="font-label-md text-label-md uppercase font-bold text-on-surface max-w-[180px] line-clamp-1" title={data.category}>
                         {data.category || 'Khác'}
