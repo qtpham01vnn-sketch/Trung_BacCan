@@ -27,6 +27,7 @@ const COLORS = ['#00639a', '#006a60', '#ba1a1a', '#6750a4', '#b3261e', '#f9a825'
 export default function AnalyticsPage() {
   const [timeFilter, setTimeFilter] = useState<"today" | "week" | "month">("week");
   const [projectIdFilter, setProjectIdFilter] = useState<string>("all");
+  const [selectedForm, setSelectedForm] = useState<any>(null);
 
   const supabase = createClient();
 
@@ -102,7 +103,8 @@ export default function AnalyticsPage() {
         const num = Number(form.form_data?.workerCount) || 0;
         workers += num;
       } else if (form.type === "expense") {
-        const amount = Number(form.form_data?.amount) || 0;
+        const amountStr = String(form.form_data?.amount || "0").replace(/[^0-9]/g, "");
+        const amount = Number(amountStr) || 0;
         expenses += amount;
         
         const cat = form.form_data?.category || "Khác";
@@ -156,7 +158,6 @@ export default function AnalyticsPage() {
             className="w-full h-12 px-3 border-4 border-on-surface bg-surface-container-lowest focus:outline-none shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer appearance-none rounded-none font-bold"
           >
             <option value="all">Tất cả dự án</option>
-            <option value="default-project">Dự án mặc định</option>
             {projects.map(p => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
@@ -245,8 +246,8 @@ export default function AnalyticsPage() {
                     <YAxis yAxisId="left" tick={{fontSize: 12, fontWeight: 'bold'}} />
                     <YAxis yAxisId="right" orientation="right" tick={{fontSize: 12, fontWeight: 'bold'}} />
                     <Tooltip cursor={{fill: 'rgba(0,0,0,0.1)'}} contentStyle={{fontWeight: 'bold', border: '4px solid black', borderRadius: 0}} />
-                    <Bar yAxisId="left" dataKey="trips" fill="#00639a" name="Số chuyến" />
-                    <Line yAxisId="right" type="monotone" dataKey="hours" stroke="#006a60" strokeWidth={4} name="Số giờ" dot={{r: 4}} />
+                    <Bar yAxisId="left" dataKey="trips" fill="#006a60" name="Chuyến xe" barSize={30} />
+                    <Bar yAxisId="right" dataKey="hours" fill="#191c1e" name="Giờ máy" barSize={30} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -258,7 +259,11 @@ export default function AnalyticsPage() {
             <h3 className="font-headline-sm mb-4 uppercase tracking-tight">Khai báo gần nhất</h3>
             <div className="space-y-4">
               {filteredForms.slice(-15).reverse().map(form => (
-                <div key={form.id} className="p-4 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200">
+                <div 
+                  key={form.id} 
+                  onClick={() => setSelectedForm(form)}
+                  className="p-4 bg-surface-container-high border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] transition-all duration-200 cursor-pointer"
+                >
                   <div className="flex justify-between mb-2">
                     <span className="font-black uppercase text-sm tracking-widest flex items-center gap-2">
                       {form.type === 'transport' && <><span className="material-symbols-outlined text-primary">local_shipping</span>Chuyến Xe</>}
@@ -304,7 +309,7 @@ export default function AnalyticsPage() {
                       <div className="flex flex-col">
                         <span>Hạng mục: <strong>{form.form_data.category}</strong></span>
                         <span className="text-sm opacity-80 mt-1">{form.form_data.description}</span>
-                        <span className="text-2xl font-black text-error mt-2">{formatVND(Number(form.form_data.amount))}</span>
+                        <span className="text-2xl font-black text-error mt-2">{formatVND(Number(String(form.form_data.amount || "0").replace(/[^0-9]/g, "")))}</span>
                       </div>
                     )}
                     
@@ -330,6 +335,59 @@ export default function AnalyticsPage() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Modal Chi tiết */}
+      {selectedForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedForm(null)}>
+          <div className="bg-surface w-full max-w-lg border-4 border-on-surface shadow-[8px_8px_0px_0px_rgba(25,28,30,1)] flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b-4 border-on-surface bg-surface-container-high flex justify-between items-center">
+              <h3 className="font-title-lg font-black uppercase">Chi tiết báo cáo</h3>
+              <button onClick={() => setSelectedForm(null)} className="material-symbols-outlined hover:text-error">close</button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto">
+              <div className="mb-6 pb-6 border-b-2 border-dashed border-outline-variant">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-label-lg px-2 py-1 bg-primary text-on-primary font-bold uppercase">{selectedForm.type}</span>
+                </div>
+                <div className="text-body-sm text-on-surface-variant flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">schedule</span>
+                  {new Date(selectedForm.created_at).toLocaleString('vi-VN')}
+                  <span className="mx-1">•</span>
+                  <span className="material-symbols-outlined text-sm">construction</span>
+                  <span>{projects.find((p: any) => p.id === selectedForm.project_id)?.name || selectedForm.project_id}</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {Object.entries(selectedForm.form_data).map(([key, value]) => {
+                  if (key === 'photoUrl') return (
+                    <div key={key} className="mt-4">
+                      <p className="font-bold mb-2">Ảnh đính kèm:</p>
+                      <img src={value as string} alt="Đính kèm" className="w-full border-4 border-on-surface object-cover max-h-[400px]" />
+                    </div>
+                  );
+                  return (
+                    <div key={key} className="flex justify-between items-center border-b border-outline-variant pb-2">
+                      <span className="text-on-surface-variant font-medium capitalize">{key}</span>
+                      <span className="font-black text-lg text-right break-words">{String(value)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            
+            <div className="p-4 border-t-4 border-on-surface bg-surface-container flex justify-end">
+              <button 
+                onClick={() => setSelectedForm(null)}
+                className="px-6 py-3 font-label-lg font-bold uppercase border-4 border-on-surface hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] transition-all bg-white"
+              >
+                ĐÓNG
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
