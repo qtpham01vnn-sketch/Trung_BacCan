@@ -63,7 +63,7 @@ export default function LoginPage() {
 
       {/* Main Content Canvas */}
       <main className="flex-grow flex items-center justify-center px-4 pb-20">
-        <div className="w-full max-w-md bg-surface-container-lowest border-2 border-on-surface p-8 shadow-[8px_8px_0px_0px_rgba(25,28,30,1)]">
+        <div className="w-full max-w-md bg-surface-container-lowest border-4 border-on-surface p-8 shadow-[12px_12px_0px_0px_rgba(25,28,30,1)]">
           {/* Login Type Selector */}
           <div className="flex border-b-2 border-surface-container-high mb-8">
             <button
@@ -119,7 +119,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:ring-0 focus:border-primary focus:shadow-[0_0_0_2px_#ffdbca] transition-all"
+                  className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] font-body-lg text-body-lg focus:outline-none focus:ring-0 focus:border-primary focus:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer"
                   placeholder={tab === "field" ? "congnhan@test.com" : "name@trungbaccan.vn"}
                   type="email"
                 />
@@ -138,7 +138,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-2 border-on-surface font-body-lg text-body-lg focus:outline-none focus:ring-0 focus:border-primary focus:shadow-[0_0_0_2px_#ffdbca] transition-all"
+                  className="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border-4 border-on-surface shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] font-body-lg text-body-lg focus:outline-none focus:ring-0 focus:border-primary focus:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all cursor-pointer"
                   placeholder="••••••••"
                   type="password"
                 />
@@ -149,7 +149,7 @@ export default function LoginPage() {
               <button 
                 type="submit"
                 disabled={loading}
-                className="w-full h-[56px] bg-primary text-white font-bold text-label-lg border-2 border-on-surface flex items-center justify-center gap-2 active:translate-y-1 active:translate-x-1 active:shadow-none transition-all shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full h-[56px] bg-primary text-white font-bold text-label-lg border-4 border-on-surface flex items-center justify-center gap-2 shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "ĐANG XỬ LÝ..." : "ĐĂNG NHẬP"}
                 {!loading && <span className="material-symbols-outlined">arrow_forward</span>}
