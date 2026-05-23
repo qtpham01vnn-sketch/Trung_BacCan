@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trung-bac-can-v2';
+const CACHE_NAME = 'trung-bac-can-v3';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.json',
