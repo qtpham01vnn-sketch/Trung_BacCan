@@ -305,7 +305,7 @@ export default function ApprovalsPage() {
                     {formatDateTime(form.created_at)}
                     <span className="mx-1">•</span>
                     <span className="material-symbols-outlined text-sm">construction</span>
-                    <span className="truncate max-w-[120px]">{form.projects?.name || form.project_id}</span>
+                    <span className="truncate max-w-[120px]">{projects.find((p: any) => p.id === form.project_id)?.name || form.project_id}</span>
                   </div>
                 </div>
 
@@ -375,7 +375,7 @@ export default function ApprovalsPage() {
                   {formatDateTime(selectedForm.created_at)}
                   <span className="mx-1">•</span>
                   <span className="material-symbols-outlined text-sm">construction</span>
-                  <span>{selectedForm.projects?.name || selectedForm.project_id}</span>
+                  <span>{projects.find((p: any) => p.id === selectedForm.project_id)?.name || selectedForm.project_id}</span>
                 </div>
               </div>
               <button 

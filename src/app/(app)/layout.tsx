@@ -148,14 +148,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {role === "admin" && (
           <Link
-            href="/projects"
+            href="/approvals"
             className={clsx(
               "flex flex-col items-center justify-center duration-150 group",
-              pathname === "/projects" ? "text-primary" : "text-on-surface-variant hover:bg-surface-container"
+              pathname === "/approvals" ? "text-primary" : "text-on-surface-variant hover:bg-surface-container"
             )}
           >
-            <span className="material-symbols-outlined group-hover:scale-110">construction</span>
-            <span className="font-label-md text-label-md">Dự án</span>
+            <span className="material-symbols-outlined group-hover:scale-110">fact_check</span>
+            <span className="font-label-md text-label-md">Phê duyệt</span>
           </Link>
         )}
 
