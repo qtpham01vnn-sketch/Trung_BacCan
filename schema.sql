@@ -67,7 +67,13 @@ INSERT INTO public.master_data (type, value, label) VALUES
 ('machine', 'MX-02', 'Máy Xúc 02 (Komatsu)'),
 ('material', 'cat_san_lap', 'Cát san lấp'),
 ('material', 'da_dam', 'Đá dăm'),
-('material', 'dat_doi', 'Đất đồi');
+('material', 'dat_doi', 'Đất đồi'),
+('expense_category', 'xang_dau', 'Đổ xăng / dầu'),
+('expense_category', 'sua_chua', 'Sửa chữa / Bảo dưỡng'),
+('expense_category', 'vat_tu', 'Mua vật tư phụ'),
+('expense_category', 'an_uong', 'Ăn uống / Tiếp khách'),
+('worker', 'nguyen_van_a', 'Nguyễn Văn A'),
+('worker', 'tran_thuy_b', 'Trần Thị B');
 
 -- ==========================================
 -- BUCKET LƯU TRỮ ẢNH (STORAGE)

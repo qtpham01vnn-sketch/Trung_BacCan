@@ -67,6 +67,19 @@ export default function DashboardPage() {
     }
   });
 
+  // Fetch master data for mapping IDs to names
+  const { data: masterDataList = [] } = useQuery({
+    queryKey: ['master_data'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('master_data')
+        .select('*')
+        .eq('is_active', true);
+      if (error) throw error;
+      return data;
+    }
+  });
+
   // Fetch volume trend for last 7 days
   const { data: volumeTrend } = useQuery({
     queryKey: ['volume_trend'],
@@ -347,6 +360,14 @@ export default function DashboardPage() {
                         {form.type === "attendance" && (
                           <>
                             <p><span className="opacity-70">Số công nhân:</span> <strong>{data.workerCount} người</strong></p>
+                            {data.absentWorkers && data.absentWorkers.length > 0 && (
+                              <p><span className="opacity-70 text-error">Vắng mặt:</span> <strong className="text-error">
+                                {data.absentWorkers.map((wVal: string) => {
+                                  const worker = masterDataList.find((m: any) => m.type === 'worker' && m.value === wVal);
+                                  return worker ? worker.label : wVal;
+                                }).join(', ')}
+                              </strong></p>
+                            )}
                             {data.notes && <p><span className="opacity-70">Ghi chú:</span> {data.notes}</p>}
                           </>
                         )}

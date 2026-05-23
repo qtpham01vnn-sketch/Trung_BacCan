@@ -103,6 +103,8 @@ export default function MasterDataPage() {
           <option value="vehicle">Xe Ben / Tải</option>
           <option value="machine">Máy Xúc / Thiết Bị</option>
           <option value="material">Loại Vật Liệu</option>
+          <option value="expense_category">Hạng Mục Chi Phí</option>
+          <option value="worker">Danh Sách Công Nhân</option>
         </select>
         <input placeholder="Mã viết tắt (VD: MX-05)" value={formValue} onChange={(e) => setFormValue(e.target.value)} className="w-full h-14 px-3 bg-white border-4 border-on-surface font-body-lg shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all focus:outline-none focus:border-primary" />
         <input placeholder="Tên hiển thị (VD: Máy Xúc 05 - CAT)" value={formLabel} onChange={(e) => setFormLabel(e.target.value)} className="w-full h-14 px-3 bg-white border-4 border-on-surface font-body-lg shadow-[4px_4px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] transition-all focus:outline-none focus:border-primary" />
@@ -115,7 +117,9 @@ export default function MasterDataPage() {
           { id: "all", label: "Tất cả" },
           { id: "vehicle", label: "Xe cộ" },
           { id: "machine", label: "Máy móc" },
-          { id: "material", label: "Vật liệu" }
+          { id: "material", label: "Vật liệu" },
+          { id: "expense_category", label: "Chi phí" },
+          { id: "worker", label: "Công nhân" }
         ].map(tab => (
           <button
             key={tab.id}
@@ -142,6 +146,8 @@ export default function MasterDataPage() {
                   <span className={`text-[10px] font-bold uppercase px-2 py-1 mr-2 inline-block mb-1 border border-on-surface ${
                     item.type === 'vehicle' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' :
                     item.type === 'machine' ? 'bg-[#f59e0b]/20 text-[#f59e0b]' :
+                    item.type === 'expense_category' ? 'bg-[#8b5cf6]/20 text-[#8b5cf6]' :
+                    item.type === 'worker' ? 'bg-[#06b6d4]/20 text-[#06b6d4]' :
                     'bg-[#10b981]/20 text-[#10b981]'
                   }`}>{item.type}</span>
                   {item.is_active === false && <span className="text-[10px] font-bold uppercase bg-error/20 text-error px-2 py-1 border border-error mb-1 inline-block">ĐÃ ẨN</span>}

@@ -53,6 +53,8 @@ export default function InputHubPage() {
   const machines = masterDataList.filter((m) => m.type === "machine" && m.is_active !== false);
   const vehicles = masterDataList.filter((m) => m.type === "vehicle" && m.is_active !== false);
   const materials = masterDataList.filter((m) => m.type === "material" && m.is_active !== false);
+  const expenseCategories = masterDataList.filter((m) => m.type === "expense_category" && m.is_active !== false);
+  const workers = masterDataList.filter((m) => m.type === "worker" && m.is_active !== false);
 
   const triggerVibration = () => {
     if (typeof window !== "undefined" && window.navigator.vibrate) {
@@ -276,13 +278,29 @@ export default function InputHubPage() {
               </div>
               <div className="space-y-2">
                 <label className="font-label-lg text-label-lg text-on-surface-variant block uppercase tracking-widest">
-                  GHI CHÚ / THIẾU VẮNG
+                  NGƯỜI VẮNG MẶT (NẾU CÓ)
+                </label>
+                <select
+                  multiple
+                  {...register("absentWorkers")}
+                  className="w-full h-32 p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] rounded-none"
+                >
+                  {workers.map(w => (
+                    <option key={w.id} value={w.value} className="p-2 border-b-2 border-on-surface/10 mb-1">{w.label}</option>
+                  ))}
+                </select>
+                <p className="text-sm font-bold text-on-surface-variant italic">Mẹo: Trên điện thoại chạm để chọn nhiều người.</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="font-label-lg text-label-lg text-on-surface-variant block uppercase tracking-widest">
+                  GHI CHÚ THÊM
                 </label>
                 <textarea
                   {...register("notes")}
                   className="w-full p-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)]"
-                  rows={4}
-                  placeholder="Ghi chú thêm..."
+                  rows={2}
+                  placeholder="Lý do vắng, hoặc ghi chú khác..."
                 />
               </div>
             </>
@@ -419,10 +437,9 @@ export default function InputHubPage() {
                   className="w-full h-14 px-4 bg-surface-container-lowest border-4 border-on-surface font-body-lg text-body-lg focus:outline-none focus:border-primary transition-all shadow-[6px_6px_0px_0px_rgba(25,28,30,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(25,28,30,1)] appearance-none rounded-none"
                 >
                   <option value="">-- Chọn hạng mục --</option>
-                  <option value="Xăng dầu">Đổ xăng / dầu</option>
-                  <option value="Sửa chữa">Sửa chữa / Bảo dưỡng</option>
-                  <option value="Vật tư">Mua vật tư phụ</option>
-                  <option value="Ăn uống">Ăn uống / Tiếp khách</option>
+                  {expenseCategories.map(c => (
+                    <option key={c.id} value={c.value}>{c.label}</option>
+                  ))}
                   <option value="Khác">Khác</option>
                 </select>
               </div>
